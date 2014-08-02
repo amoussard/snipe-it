@@ -257,11 +257,17 @@ class AssetsController extends AdminController
         // Grab the dropdown list of models
         $model_list = array('' => '') + Model::orderBy('name', 'asc')->lists('name', 'id');
         $supplier_list = array('' => '') + Supplier::orderBy('name', 'asc')->lists('name', 'id');
+        $location_list = array('' => '') + Location::lists('name', 'id');
 
         // Grab the dropdown list of status
         $statuslabel_list = array('' => Lang::get('general.pending')) + array('0' => Lang::get('general.ready_to_deploy')) + Statuslabel::orderBy('name', 'asc')->lists('name', 'id');
 
-        return View::make('backend/hardware/edit', compact('asset'))->with('model_list',$model_list)->with('supplier_list',$supplier_list)->with('statuslabel_list',$statuslabel_list);
+        return View::make('backend/hardware/edit', compact('asset'))
+            ->with('model_list', $model_list)
+            ->with('supplier_list', $supplier_list)
+            ->with('statuslabel_list', $statuslabel_list)
+            ->with('location_list', $location_list)
+        ;
     }
 
 
@@ -298,6 +304,12 @@ class AssetsController extends AdminController
             // Ooops.. something went wrong
             return Redirect::back()->withInput()->withErrors($validator);
         }
+
+            if (e(Input::get('location_id')) == '') {
+                $asset->location_id =  NULL;
+            } else {
+                $asset->location_id =  e(Input::get('location_id'));
+            }
 
             if ( e(Input::get('status_id')) == '') {
                 $asset->status_id =  NULL;

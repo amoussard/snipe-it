@@ -48,12 +48,13 @@
             <th class="col-md-3" bSortable="true">@lang('general.name')</th>
             @endif
             <th class="col-md-2" bSortable="true">@lang('admin/hardware/table.serial')</th>
-            @if (Input::get('Pending') || Input::get('Undeployable') || Input::get('RTD'))
+            {{--  @if (Input::get('Pending') || Input::get('Undeployable') || Input::get('RTD'))
             <th class="col-md-2" bSortable="true">@lang('general.status')</th>
             @else
             <th class="col-md-2" bSortable="true">@lang('admin/hardware/table.checkoutto')</th>
             <th class="col-md-2" bSortable="true">@lang('admin/hardware/table.location')</th>
-            @endif
+            @endif --}}
+            <th class="col-md-2" bSortable="true">@lang('admin/hardware/table.location')</th>
             <th class="col-md-2">@lang('admin/hardware/table.eol')</th>
             <th class="col-md-1">@lang('admin/hardware/table.change')</th>
             <th class="col-md-2 actions" bSortable="false">@lang('table.actions')</th>
@@ -69,7 +70,7 @@
                 <td><a href="{{ route('view/hardware', $asset->id) }}">{{ $asset->name }}</a></td>
             @endif
             <td>{{ $asset->serial }}</td>
-            @if (Input::get('Pending') || Input::get('Undeployable') || Input::get('RTD'))
+            {{--            @if (Input::get('Pending') || Input::get('Undeployable') || Input::get('RTD'))
                 <td>
                     @if (Input::get('Pending'))
                         @lang('general.pending')
@@ -96,8 +97,14 @@
                 @endif
                 </td>
 
-            @endif
-
+            @endif  --}}
+            <td>
+                @if ($asset->loc)
+                    {{{ $asset->loc->name }}}
+                @else
+                    @lang('general.n_a')
+                @endif
+            </td>
             <td>
             @if ($asset->model->eol) {{{ $asset->eol_date() }}}
             @endif

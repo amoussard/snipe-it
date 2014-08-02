@@ -54,14 +54,6 @@ class Asset extends Elegant
     }
 
     /**
-    * Get the asset's location based on the assigned user
-    **/
-    public function assetloc()
-    {
-        return $this->assigneduser->userloc();
-    }
-
-    /**
     * Get action logs for this asset
     */
     public function assetlog()
@@ -189,6 +181,14 @@ class Asset extends Elegant
             $date = date_create($this->purchase_date);
             date_add($date, date_interval_create_from_date_string($this->model->eol.' months'));
             return date_format($date, 'Y-m-d');
+    }
+
+    /**
+     * Get the asset's location based on the assigned user
+     **/
+    public function loc()
+    {
+        return $this->belongsTo('Location','location_id')->withTrashed();
     }
 
 
