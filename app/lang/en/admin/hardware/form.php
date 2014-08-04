@@ -27,7 +27,7 @@ return array(
     'serial'			=> 'Serial',
     'status'			=> 'Status',
     'supplier'			=> 'Supplier',
-    'tag'				=> 'Asset Tag',
+    'tag'				=> 'Mac Address',
     'update'			=> 'Asset Update',
     'warranty'			=> 'Warranty',
     'years'				=> 'years',

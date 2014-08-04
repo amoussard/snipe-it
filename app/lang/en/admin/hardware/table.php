@@ -2,7 +2,7 @@
 
 return array(
 
-    'asset_tag'   	=> 'Asset Tag',
+    'asset_tag'   	=> 'Mac Address',
     'book_value'  	=> 'Value',
     'change' 		=> 'In/Out',
     'checkoutto' 	=> 'Checked Out',
