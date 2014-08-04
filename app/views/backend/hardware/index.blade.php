@@ -65,50 +65,35 @@
         @foreach ($assets as $asset)
         <tr>
             <td><a href="{{ route('view/hardware', $asset->id) }}">{{ $asset->asset_tag }}</a></td>
-            <td><a href="{{ route('view/hardware', $asset->id) }}">{{ $asset->model->name }}</a></td>
+            <td>
+                @if ($asset->model)
+                    <a href="{{ route('view/hardware', $asset->id) }}">{{{ $asset->model->name }}}</a>
+                @else
+                    @lang('general.na')
+                @endif
+            </td>
             @if (Setting::getSettings()->display_asset_name)
                 <td><a href="{{ route('view/hardware', $asset->id) }}">{{ $asset->name }}</a></td>
             @endif
-            <td>{{ $asset->serial }}</td>
-            {{--            @if (Input::get('Pending') || Input::get('Undeployable') || Input::get('RTD'))
-                <td>
-                    @if (Input::get('Pending'))
-                        @lang('general.pending')
-                    @elseif (Input::get('RTD'))
-                        @lang('general.ready_to_deploy')
-                    @elseif (Input::get('Undeployable'))
-                        @if ($asset->assetstatus) {{{ $asset->assetstatus->name }}}
-                        @endif
-                    @endif
-                </td>
-            @else
-                <td>
-                @if ($asset->assigneduser)
-                    <a href="{{ route('view/user', $asset->assigned_to) }}">
-                    {{{ $asset->assigneduser->fullName() }}}
-                    </a>
-                @endif
-                </td>
-                <td>
-                @if ($asset->assigneduser && $asset->assetloc) {{{ $asset->assetloc->name }}}
+            <td>
+                @if ($asset->model)
+                    <a href="{{ route('view/hardware', $asset->id) }}">{{ $asset->serial }}</a>
                 @else
-                    @if ($asset->assetstatus) {{{ $asset->assetstatus->name }}}
-                    @endif
+                    @lang('general.na')
                 @endif
-                </td>
-
-            @endif  --}}
+            </td>
             <td>
                 @if ($asset->loc)
                     <a href="{{ route('view/location', $asset->location_id) }}">
-                    {{{ $asset->loc->name }}}
+                        {{{ $asset->loc->name }}}
                     </a>
                 @else
                     @lang('general.na')
                 @endif
             </td>
             <td>
-            @if ($asset->model->eol) {{{ $asset->eol_date() }}}
+            @if ($asset->model && $asset->model->eol)
+                {{{ $asset->eol_date() }}}
             @endif
             </td>
 
