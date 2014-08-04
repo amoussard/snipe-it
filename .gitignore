@@ -14,3 +14,7 @@ public/packages/*
 /app/storage/logs/*
 /app/storage/debugbar/
 /bin/
+
+# IDE settings
+.idea
+
