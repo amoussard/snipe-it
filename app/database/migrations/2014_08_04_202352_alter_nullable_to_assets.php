@@ -22,7 +22,7 @@ class AlterNullableToAssets extends Migration {
             DB::statement('ALTER TABLE assets MODIFY COLUMN status_id INT(11) NULL DEFAULT NULL');
             DB::statement('ALTER TABLE assets MODIFY COLUMN warranty_months INT(3) NULL DEFAULT NULL');
             DB::statement('ALTER TABLE assets MODIFY COLUMN supplier_id INT(11) NULL DEFAULT NULL');
-            DB::statement('ALTER TABLE assets MODIFY COLUMN model INT(11) NULL DEFAULT NULL');
+            DB::statement('ALTER TABLE assets MODIFY COLUMN model_id INT(11) NULL DEFAULT NULL');
 		});
 	}
 
