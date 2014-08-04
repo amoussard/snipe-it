@@ -9,6 +9,7 @@ return array(
     'date'				=> 'Purchase Date',
     'depreciates_on'	=> 'Depreciates On',
     'depreciation'		=> 'Depreciation',
+    'domain'		    => 'Domain',
     'eol_date'			=> 'EOL Date',
     'eol_rate'			=> 'EOL Rate',
     'expires'			=> 'Expires',
