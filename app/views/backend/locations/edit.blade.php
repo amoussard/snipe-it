@@ -34,91 +34,109 @@
     <!-- CSRF Token -->
     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
-            <!-- Location Name -->
-            <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-                <label for="name" class="col-md-2 control-label">@lang('admin/locations/table.name')
-                 <i class='icon-asterisk'></i></label>
-                 </label>
-                    <div class="col-md-12">
-                        <div class="col-xs-8">
-                        <input class="form-control" type="text" name="name" id="name" value="{{{ Input::old('name', $location->name) }}}" />
-                    </div>
-                    {{ $errors->first('name', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
-                    </div>
+        <!-- Location Name -->
+        <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
+            <label for="name" class="col-md-2 control-label">
+                @lang('admin/locations/table.name')
+                <i class='icon-asterisk'></i>
+            </label>
+            <div class="col-md-12">
+                <div class="col-xs-8">
+                    <input class="form-control" type="text" name="name" id="name" value="{{{ Input::old('name', $location->name) }}}" />
+                </div>
+                {{ $errors->first('name', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
             </div>
+        </div>
 
-            <!-- Address -->
-            <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
-                <label for="address" class="col-md-2 control-label">@lang('admin/locations/table.address')
-                 <i class='icon-asterisk'></i></label></label>
-                    <div class="col-md-12">
-                        <div class="col-xs-8">
-                        <input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', $location->address) }}}" />
-                    </div>
-                    {{ $errors->first('address', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
-                    </div>
+        <!-- Address -->
+        <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
+            <label for="address" class="col-md-2 control-label">
+                @lang('admin/locations/table.address')
+                <i class='icon-asterisk'></i>
+            </label>
+            <div class="col-md-12">
+                <div class="col-xs-8">
+                    <input class="form-control" type="text" name="address" id="address" value="{{{ Input::old('address', $location->address) }}}" />
+                </div>
+                {{ $errors->first('address', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
             </div>
+        </div>
 
-            <!-- Address -->
-            <div class="form-group {{ $errors->has('address2') ? ' has-error' : '' }}">
-                <label for="address2" class="col-md-2 control-label"></label>
-                    <div class="col-md-12">
-                        <div class="col-xs-8">
-                        <input class="form-control" type="text" name="address2" id="address2" value="{{{ Input::old('address2', $location->address2) }}}" />
-                    </div>
-                    {{ $errors->first('address2', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
-                    </div>
+        <!-- Address -->
+        <div class="form-group {{ $errors->has('address2') ? ' has-error' : '' }}">
+            <label for="address2" class="col-md-2 control-label"></label>
+            <div class="col-md-12">
+                <div class="col-xs-8">
+                    <input class="form-control" type="text" name="address2" id="address2" value="{{{ Input::old('address2', $location->address2) }}}" />
+                </div>
+                {{ $errors->first('address2', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
             </div>
+        </div>
 
-            <!-- City -->
-            <div class="form-group {{ $errors->has('city') ? ' has-error' : '' }}">
-                <label for="city" class="col-md-2 control-label">@lang('admin/locations/table.city')
-                 <i class='icon-asterisk'></i></label>
-                 </label>
-                    <div class="col-md-12">
-                        <div class="col-xs-8">
-                        <input class="form-control" type="text" name="city" id="city" value="{{{ Input::old('city', $location->city) }}}" />
-                    </div>
-                    {{ $errors->first('city', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
-                    </div>
+        <!-- City -->
+        <div class="form-group {{ $errors->has('city') ? ' has-error' : '' }}">
+            <label for="city" class="col-md-2 control-label">
+                @lang('admin/locations/table.city')
+                <i class='icon-asterisk'></i>
+            </label>
+            <div class="col-md-12">
+                <div class="col-xs-8">
+                    <input class="form-control" type="text" name="city" id="city" value="{{{ Input::old('city', $location->city) }}}" />
+                </div>
+                {{ $errors->first('city', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
             </div>
+        </div>
 
-            <!-- City -->
-            <div class="form-group {{ $errors->has('state') ? ' has-error' : '' }}">
-                <label for="state" class="col-md-2 control-label">@lang('admin/locations/table.state')
-                 <i class='icon-asterisk'></i></label>
-                 </label>
-                    <div class="col-md-12">
-                        <div class="col-xs-2">
-                        <input class="form-control" type="text" name="state" id="state" value="{{{ Input::old('state', $location->state) }}}" />
-                    </div>
-                    {{ $errors->first('state', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
-                    </div>
+        <!-- City -->
+        <div class="form-group {{ $errors->has('state') ? ' has-error' : '' }}">
+            <label for="state" class="col-md-2 control-label">
+                @lang('admin/locations/table.state')
+                <i class='icon-asterisk'></i>
+            </label>
+            <div class="col-md-12">
+                <div class="col-xs-2">
+                    <input class="form-control" type="text" name="state" id="state" value="{{{ Input::old('state', $location->state) }}}" />
+                </div>
+                {{ $errors->first('state', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
             </div>
+        </div>
 
-            <!-- Zip -->
-            <div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}">
-                <label for="zip" class="col-md-2 control-label">@lang('admin/locations/table.zip')</label>
-                    <div class="col-md-12">
-                        <div class="col-xs-3">
-                        <input class="form-control" type="text" name="zip" id="zip" value="{{{ Input::old('zip', $location->zip) }}}" />
-                    </div>
-                    {{ $errors->first('zip', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
-                    </div>
+        <!-- Zip -->
+        <div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}">
+            <label for="zip" class="col-md-2 control-label">
+                @lang('admin/locations/table.zip')
+            </label>
+            <div class="col-md-12">
+                <div class="col-xs-3">
+                    <input class="form-control" type="text" name="zip" id="zip" value="{{{ Input::old('zip', $location->zip) }}}" />
+                </div>
+                {{ $errors->first('zip', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
             </div>
+        </div>
 
-            <!-- Country -->
-            <div class="form-group {{ $errors->has('country') ? ' has-error' : '' }}">
-                <label for="country" class="col-md-2 control-label">@lang('admin/locations/table.country')
-                 <i class='icon-asterisk'></i></label>
-                 </label>
-                    <div class="col-md-5">
-
-                         {{ Form::countries('country', Input::old('country', $location->country), 'select2') }}
-                        </div>
-                        {{ $errors->first('country', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
-                    </div>
+        <!-- Country -->
+        <div class="form-group {{ $errors->has('country') ? ' has-error' : '' }}">
+            <label for="country" class="col-md-2 control-label">
+                @lang('admin/locations/table.country')
+                <i class='icon-asterisk'></i>
+            </label>
+            <div class="col-md-5">
+                {{ Form::countries('country', Input::old('country', $location->country), 'select2') }}
+                {{ $errors->first('country', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
             </div>
+        </div>
+
+        <!-- Domain -->
+        <div class="form-group {{ $errors->has('domain_id') ? 'has-error' : '' }}">
+            <label class="col-md-2 control-label" for="domain_id">
+                @lang('admin/hardware/form.domain')
+                <i class='icon-asterisk'></i>
+            </label>
+            <div class="col-md-5">
+                {{ Form::select('domain_id', $domain_list , Input::old('domain_id', $location->domain_id), array('class'=>'select2', 'style'=>'width:250px')) }}
+                {{ $errors->first('domain_id', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
+            </div>
+        </div>
 
 
             <!-- Form actions -->

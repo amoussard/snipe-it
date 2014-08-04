@@ -32,6 +32,7 @@ return array(
     'deployed'				=> 'Deployed',
     'depreciation_report'	=> 'Depreciation Report',
     'depreciation'			=> 'Depreciation',
+    'domains'			    => 'Domains',
     'editprofile'  			=> 'Edit Profile',
     'eol'					=> 'EOL',
     'first_name'			=> 'First Name',

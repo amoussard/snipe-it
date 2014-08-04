@@ -122,6 +122,17 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::get('{depreciationId}/delete', array('as' => 'delete/depreciations', 'uses' => 'Controllers\Admin\DepreciationsController@getDelete'));
         });
 
+        # Domains
+        Route::group(array('prefix' => 'domains'), function () {
+            Route::get('/', array('as' => 'domains', 'uses' => 'Controllers\Admin\DomainsController@getIndex'));
+            Route::get('create', array('as' => 'create/domain', 'uses' => 'Controllers\Admin\DomainsController@getCreate'));
+            Route::post('create', 'Controllers\Admin\DomainsController@postCreate');
+            Route::get('{domainId}/edit', array('as' => 'update/domain', 'uses' => 'Controllers\Admin\DomainsController@getEdit'));
+            Route::post('{domainId}/edit', 'Controllers\Admin\DomainsController@postEdit');
+            Route::get('{domainId}/view', array('as' => 'view/domain', 'uses' => 'Controllers\Admin\DomainsController@getView'));
+            Route::get('{domainId}/delete', array('as' => 'delete/domain', 'uses' => 'Controllers\Admin\DomainsController@getDelete'));
+        });
+
         # Locations
         Route::group(array('prefix' => 'locations'), function () {
             Route::get('/', array('as' => 'locations', 'uses' => 'Controllers\Admin\LocationsController@getIndex'));

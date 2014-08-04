@@ -4,6 +4,7 @@ use AdminController;
 use Input;
 use Lang;
 use Location;
+use Domain;
 use Redirect;
 use Setting;
 use DB;
@@ -39,7 +40,12 @@ class LocationsController extends AdminController
     {
         // Show the page
         $location_options = array('0' => 'Top Level') + Location::lists('name', 'id');
-        return View::make('backend/locations/edit')->with('location_options',$location_options)->with('location',new Location);
+        $domain_list = array('' => '') + Domain::lists('name', 'id');
+
+        return View::make('backend/locations/edit')
+            ->with('location_options',$location_options)
+            ->with('location',new Location)
+            ->with('domain_list', $domain_list);
     }
 
 
@@ -102,10 +108,12 @@ class LocationsController extends AdminController
         }
 
         // Show the page
-        //$location_options = array('' => 'Top Level') + Location::lists('name', 'id');
+        $domain_list = array('' => '') + Domain::lists('name', 'id');
 
         $location_options = array('' => 'Top Level') + DB::table('locations')->where('id', '!=', $locationId)->lists('name', 'id');
-        return View::make('backend/locations/edit', compact('location'))->with('location_options',$location_options);
+        return View::make('backend/locations/edit', compact('location'))
+            ->with('location_options', $location_options)
+            ->with('domain_list', $domain_list);
     }
 
 
@@ -123,11 +131,8 @@ class LocationsController extends AdminController
             return Redirect::to('admin/settings/locations')->with('error', Lang::get('admin/locations/message.does_not_exist'));
         }
 
-
-
         // get the POST data
         $new = Input::all();
-
 
         // attempt validation
         if ($location->validate($new)) {
@@ -139,17 +144,21 @@ class LocationsController extends AdminController
             $location->city    			= e(Input::get('city'));
             $location->state    		= e(Input::get('state'));
             $location->country    		= e(Input::get('country'));
-            $location->zip    		= e(Input::get('zip'));
+            $location->zip    		    = e(Input::get('zip'));
+            $location->domain_id 		= e(Input::get('domain_id'));
 
             // Was the asset created?
             if($location->save()) {
                 // Redirect to the saved location page
-                return Redirect::to("admin/settings/locations/$locationId/edit")->with('success', Lang::get('admin/locations/message.update.success'));
+                return Redirect::to("admin/settings/locations/$locationId/edit")
+                    ->with('success', Lang::get('admin/locations/message.update.success'));
             }
         } else {
             // failure
             $errors = $location->errors();
-            return Redirect::back()->withInput()->withErrors($errors);
+            return Redirect::back()
+                ->withInput()
+                ->withErrors($errors);
         }
 
         // Redirect to the location management page

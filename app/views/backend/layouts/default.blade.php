@@ -185,6 +185,11 @@
                                 <i class="icon-th"></i> @lang('general.categories')
                             </a>
                         </li>
+                        <li{{ (Request::is('admin/settings/domains*') ? ' class="active"' : '') }}>
+                            <a href="{{ URL::to('admin/settings/domains') }}">
+                                <i class="icon-globe"></i> @lang('general.domains')
+                            </a>
+                        </li>
                         <li{{ (Request::is('admin/settings/locations*') ? ' class="active"' : '') }}>
                             <a href="{{ URL::to('admin/settings/locations') }}">
                                 <i class="icon-globe"></i> @lang('general.locations')

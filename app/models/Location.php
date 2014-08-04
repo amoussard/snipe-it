@@ -12,6 +12,7 @@ class Location extends Elegant
             'state'   		=> 'required|alpha|min:2',
             'country'   	=> 'required|alpha|min:2|max:2',
             'zip'   		=> 'alpha_dash|min:3',
+            'domain_id'     => 'required|integer',
         );
 
     public function has_users()
