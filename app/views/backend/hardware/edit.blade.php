@@ -137,7 +137,7 @@
 
             <!-- Location -->
             <div class="form-group {{ $errors->has('location_id') ? 'has-error' : '' }}">
-                <label class="col-md-3 control-label" for="location_id">@lang('admin/hardware/form.location')</label>
+                <label class="col-md-2 control-label" for="location_id">@lang('admin/hardware/form.location')</label>
                 <div class="col-md-7">
                     {{ Form::select('location_id', $location_list , Input::old('location_id', $asset->location_id), array('class'=>'select2', 'style'=>'width:250px')) }}
                     {{ $errors->first('location_id', '<span class="alert-msg">:message</span>') }}

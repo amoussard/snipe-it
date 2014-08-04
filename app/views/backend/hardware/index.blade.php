@@ -102,7 +102,7 @@
                 @if ($asset->loc)
                     {{{ $asset->loc->name }}}
                 @else
-                    @lang('general.n_a')
+                    @lang('general.na')
                 @endif
             </td>
             <td>

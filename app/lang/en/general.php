@@ -50,6 +50,7 @@ return array(
     'model_no'				=> 'Model No.',
     'months'				=> 'months',
     'moreinfo'				=> 'More Info',
+    'na'					=> 'N/A',
     'name'					=> 'Name',
     'no_depreciation'		=> 'No Derepciation',
     'no_results'			=> 'No Results.',
