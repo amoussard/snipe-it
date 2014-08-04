@@ -19,4 +19,9 @@ class Location extends Elegant
         return $this->hasMany('User', 'location_id')->count();
     }
 
+    public function getAssets()
+    {
+        return $this->hasMany('Asset', 'location_id')->withTrashed();
+    }
+
 }

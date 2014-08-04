@@ -100,7 +100,9 @@
             @endif  --}}
             <td>
                 @if ($asset->loc)
+                    <a href="{{ route('view/location', $asset->location_id) }}">
                     {{{ $asset->loc->name }}}
+                    </a>
                 @else
                     @lang('general.na')
                 @endif

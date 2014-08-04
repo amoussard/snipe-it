@@ -129,6 +129,7 @@ Route::group(array('prefix' => 'admin'), function () {
             Route::post('create', 'Controllers\Admin\LocationsController@postCreate');
             Route::get('{locationId}/edit', array('as' => 'update/location', 'uses' => 'Controllers\Admin\LocationsController@getEdit'));
             Route::post('{locationId}/edit', 'Controllers\Admin\LocationsController@postEdit');
+            Route::get('{locationId}/view', array('as' => 'view/location', 'uses' => 'Controllers\Admin\LocationsController@getView'));
             Route::get('{locationId}/delete', array('as' => 'delete/location', 'uses' => 'Controllers\Admin\LocationsController@getDelete'));
         });
 

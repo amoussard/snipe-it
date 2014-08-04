@@ -188,6 +188,23 @@ class LocationsController extends AdminController
 
     }
 
+    /**
+     * Get location info for location view
+     *
+     * @param  int  $locationId
+     * @return View
+     */
+    public function getView($locationId = null)
+    {
+        // Check if the location exists
+        if (is_null($location = Location::find($locationId))) {
+            // Redirect to the blogs management page
+            return Redirect::to('admin/settings/locations')->with('error', Lang::get('admin/locations/message.not_found'));
+        }
+
+        return View::make('backend/locations/view', compact('location'));
+    }
+
 
 
 }
