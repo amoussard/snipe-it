@@ -96,15 +96,14 @@
                 {{{ $asset->eol_date() }}}
             @endif
             </td>
-
             <td>
-            @if ($asset->status_id < 1 )
-            @if ($asset->assigned_to != 0)
-                <a href="{{ route('checkin/hardware', $asset->id) }}" class="btn btn-primary">@lang('general.checkin')</a>
-            @else
-                <a href="{{ route('checkout/hardware', $asset->id) }}" class="btn btn-info">@lang('general.checkout')</a>
-            @endif
-            @endif
+                @if ($asset->status_id < 1 )
+                    @if ($asset->location_id != Location::NUMEDIA_ID)
+                        <a href="{{ route('checkin/hardware', $asset->id) }}" class="btn btn-primary">@lang('general.checkin')</a>
+                    @else
+                        <a href="{{ route('checkout/hardware', $asset->id) }}" class="btn btn-info">@lang('general.checkout')</a>
+                    @endif
+                @endif
             </td>
             <td nowrap="nowrap">
                 <a href="{{ route('update/hardware', $asset->id) }}" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>

@@ -464,7 +464,7 @@ class AssetsController extends AdminController
             $logaction = new Actionlog();
             $logaction->asset_id = $asset->id;
             $logaction->checkedout_to = $asset->location_id;
-            $logaction->asset_type = 'hardware';
+            $logaction->asset_type = ASSET::TYPE_HARDWARE;
             $logaction->location_id = $location_id;
             $logaction->user_id = Sentry::getUser()->id;
             $logaction->note = e(Input::get('note'));
@@ -511,22 +511,16 @@ class AssetsController extends AdminController
             return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.not_found'));
         }
 
-        if (!is_null($asset->assigned_to)) {
-            $user = User::find($asset->assigned_to);
-        }
-
-        $logaction = new Actionlog();
-        $logaction->checkedout_to = $asset->assigned_to;
-
-        // Update the asset data to null, since it's being checked in
-        $asset->assigned_to            		= '0';
+        // Check the asset back to numedia
+        $asset->location_id = Location::NUMEDIA_ID;
 
         // Was the asset updated?
         if($asset->save()) {
-
+            $logaction = new Actionlog();
+            $logaction->checkedout_to = Location::NUMEDIA_ID;
             $logaction->asset_id = $asset->id;
-            $logaction->location_id = NULL;
-            $logaction->asset_type = 'hardware';
+            $logaction->location_id = Location::NUMEDIA_ID;
+            $logaction->asset_type = ASSET::TYPE_HARDWARE;
             $logaction->note = e(Input::get('note'));
             $logaction->user_id = Sentry::getUser()->id;
             $log = $logaction->logaction('checkin from');

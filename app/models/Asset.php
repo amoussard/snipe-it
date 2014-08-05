@@ -2,6 +2,8 @@
 
 class Asset extends Elegant
 {
+    const TYPE_HARDWARE = 'hardware';
+
     protected $table = 'assets';
     protected $softDelete = true;
     protected $rules = array(
