@@ -23,7 +23,8 @@ class DomainsController extends AdminController
     public function getIndex()
     {
         // Grab all the locations
-        $domains = Domain::orderBy('created_at', 'DESC')->paginate(Setting::getSettings()->per_page);
+        // $domains = Domain::orderBy('created_at', 'DESC')->paginate(Setting::getSettings()->per_page);
+        $domains = Domain::orderBy('created_at', 'DESC')->get();
 
         // Show the page
         return View::make('backend/domains/index', compact('domains'));

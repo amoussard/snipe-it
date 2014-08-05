@@ -71,23 +71,24 @@ View Domain {{{ $domain->name }}} ::
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th class="col-md-3">Asset Type</th>
-                            <th class="col-md-2"><span class="line"></span>Asset Tag</th>
                             <th class="col-md-2"><span class="line"></span>Name</th>
+                            <th class="col-md-2"><span class="line"></span>Asset Tag</th>
+                            <th class="col-md-3">Asset Type</th>
                             <th class="col-md-1"><span class="line"></span>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($location->getAssets as $asset)
+                        @foreach ($domain->getAssets as $asset)
                         <tr>
+                            <td><a href="{{ route('view/hardware', $asset->id) }}">{{{ $asset->name }}}</a></td>
+                            <td><a href="{{ route('view/hardware', $asset->id) }}">{{{ $asset->asset_tag }}}</a></td>
                             <td>
-                                @if ($asset->physical=='1')
-                                {{{ $asset->model->name }}}
+                                @if ($asset->model)
+                                    {{{ $asset->model->name }}}
+                                @else
+                                    @lang('general.na')
                                 @endif
                             </td>
-                            <td><a href="{{ route('view/hardware', $asset->id) }}">{{{ $asset->asset_tag }}}</a></td>
-                            <td><a href="{{ route('view/hardware', $asset->id) }}">{{{ $asset->name }}}</a></td>
-
                             <td> <a href="{{ route('checkin/hardware', $asset->id) }}" class="btn-flat info">Checkin</a></td>
                         </tr>
                         @endforeach
