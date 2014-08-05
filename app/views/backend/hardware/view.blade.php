@@ -171,49 +171,52 @@
                 <tr>
                     <th class="col-md-3"><span class="line"></span>@lang('general.date')</th>
                     <th class="col-md-2"><span class="line"></span>@lang('general.admin')</th>
-                    <th class="col-md-2"><span class="line"></span>@lang('table.action')</th>
+                    <th class="col-md-2"><span class="line"></span>@lang('table.actions')</th>
                     <th class="col-md-2"><span class="line"></span>@lang('general.user')</th>
                     <th class="col-md-3"><span class="line"></span>@lang('general.notes')</th>
                 </tr>
             </thead>
             <tbody>
-            @if (count($asset->assetlog) > 0)
-                @foreach ($asset->assetlog as $log)
-                <tr>
-                    <td>{{{ $log->added_on }}}</td>
-                    <td>
-                        @if (isset($log->user_id)) {{{ $log->adminlog->fullName() }}}
-                        @endif
-                    </td>
-                    <td>{{ $log->action_type }}</td>
-                    <td>
-                        @if (isset($log->checkedout_to))
-                        <a href="{{ route('view/user', $log->checkedout_to) }}">
-                        {{{ $log->userlog->fullName() }}}
-                        </a>
-                        @endif
-                    </td>
-                    <td>
-                        @if ($log->note) {{{ $log->note }}}
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
+                @if (count($asset->assetlog) > 0)
+                    @foreach ($asset->assetlog as $log)
+                        <tr>
+                            <td>{{{ $log->added_on }}}</td>
+                            <td>
+                                @if (isset($log->user_id))
+                                    {{{ $log->adminlog->fullName() }}}
+                                @endif
+                            </td>
+                            <td>{{ $log->action_type }}</td>
+                            <td>
+                                @if (isset($log->checkedout_to))
+                                    <a href="{{ route('view/user', $log->checkedout_to) }}">
+                                        {{{ $log->locationlog->name }}}
+                                    </a>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($log->note)
+                                    {{{ $log->note }}}
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
                 @endif
                 <tr>
                     <td>{{ $asset->created_at }}</td>
                     <td>
-                    @if ($asset->adminuser->id) {{{ $asset->adminuser->fullName() }}}
-                    @else
-                    @lang('general.unknown_admin')
-                    @endif
+                        @if ($asset->adminuser->id)
+                            {{{ $asset->adminuser->fullName() }}}
+                        @else
+                            @lang('general.unknown_admin')
+                        @endif
                     </td>
                     <td>@lang('general.created_asset')</td>
                     <td></td>
                     <td>
-                    @if ($asset->notes)
-                    {{{ $asset->notes }}}
-                    @endif
+                        @if ($asset->notes)
+                            {{{ $asset->notes }}}
+                        @endif
                     </td>
                 </tr>
             </tbody>

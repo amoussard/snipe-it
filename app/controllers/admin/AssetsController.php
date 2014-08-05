@@ -412,11 +412,12 @@ class AssetsController extends AdminController
         }
 
         // Get the dropdown of users and then pass it to the checkout view
-        $users_list = array('' => 'Select a User') + DB::table('users')->select(DB::raw('concat(first_name," ",last_name) as full_name, id'))->whereNull('deleted_at')->orderBy('last_name', 'asc')->orderBy('first_name', 'asc')->lists('full_name', 'id');
+//        $users_list = array('' => 'Select a User') + DB::table('users')->select(DB::raw('concat(first_name," ",last_name) as full_name, id'))->whereNull('deleted_at')->orderBy('last_name', 'asc')->orderBy('first_name', 'asc')->lists('full_name', 'id');
+        $location_list = array('' => '') + Location::lists('name', 'id');
 
         //print_r($users);
-        return View::make('backend/hardware/checkout', compact('asset'))->with('users_list',$users_list);
-
+        return View::make('backend/hardware/checkout', compact('asset'))
+            ->with('location_list', $location_list);
     }
 
     /**
@@ -430,12 +431,12 @@ class AssetsController extends AdminController
             return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.not_found'));
         }
 
-        $assigned_to = e(Input::get('assigned_to'));
+        $location_id = e(Input::get('location_id'));
 
 
         // Declare the rules for the form validation
         $rules = array(
-            'assigned_to'   => 'required|min:1',
+            'location_id'   => 'required|integer',
             'note'   => 'alpha_space',
         );
 
@@ -450,21 +451,21 @@ class AssetsController extends AdminController
 
 
         // Check if the user exists
-        if (is_null($assigned_to = User::find($assigned_to))) {
+        if (is_null($location = Location::find($location_id))) {
             // Redirect to the asset management page with error
-            return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.user_does_not_exist'));
+            return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.location_does_not_exist'));
         }
 
         // Update the asset data
-        $asset->assigned_to            		= e(Input::get('assigned_to'));
+        $asset->location_id = e(Input::get('location_id'));
 
         // Was the asset updated?
         if($asset->save()) {
             $logaction = new Actionlog();
             $logaction->asset_id = $asset->id;
-            $logaction->checkedout_to = $asset->assigned_to;
+            $logaction->checkedout_to = $asset->location_id;
             $logaction->asset_type = 'hardware';
-            $logaction->location_id = $assigned_to->location_id;
+            $logaction->location_id = $location_id;
             $logaction->user_id = Sentry::getUser()->id;
             $logaction->note = e(Input::get('note'));
             $log = $logaction->logaction('checkout');

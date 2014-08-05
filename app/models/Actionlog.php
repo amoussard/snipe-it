@@ -26,6 +26,10 @@ class Actionlog extends Eloquent
         return $this->belongsTo('User','checkedout_to')->withTrashed();
     }
 
+    public function locationlog()
+    {
+        return $this->belongsTo('Location','checkedout_to')->withTrashed();
+    }
 
     /**
     * Get the parent category name

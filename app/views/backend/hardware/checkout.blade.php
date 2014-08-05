@@ -18,37 +18,37 @@
 </div>
 
 <div class="row form-wrapper">
-<!-- left column -->
-<div class="col-md-10 column">
+    <!-- left column -->
+    <div class="col-md-10 column">
 
-<form class="form-horizontal" method="post" action="" autocomplete="off">
-    <!-- CSRF Token -->
-    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+        <form class="form-horizontal" method="post" action="" autocomplete="off">
+            <!-- CSRF Token -->
+            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
             <!-- Asset tag -->
             <div class="form-group">
             <label class="col-sm-2 control-label">@lang('admin/hardware/form.tag')</label>
                 <div class="col-md-6">
-                  <p class="form-control-static">{{{ $asset->asset_tag }}}</p>
+                    <p class="form-control-static">{{{ $asset->asset_tag }}}</p>
                 </div>
             </div>
 
             <!-- Asset name -->
             <div class="form-group">
-            <label class="col-sm-2 control-label">@lang('admin/hardware/form.name')</label>
+                <label class="col-sm-2 control-label">@lang('admin/hardware/form.name')</label>
                 <div class="col-md-6">
-                  <p class="form-control-static">{{{ $asset->name }}}</p>
+                    <p class="form-control-static">{{{ $asset->name }}}</p>
                 </div>
             </div>
             <!-- User -->
 
-            <div class="form-group {{ $errors->has('assigned_to') ? ' has-error' : '' }}">
-                <label for="assigned_to" class="col-md-2 control-label">@lang('admin/hardware/form.checkout_to')
+            <div class="form-group {{ $errors->has('location_id') ? ' has-error' : '' }}">
+                <label for="location_id" class="col-md-2 control-label">@lang('admin/hardware/form.checkout_to')
                  <i class='icon-asterisk'></i></label>
                  </label>
                 <div class="col-md-9">
-                    {{ Form::select('assigned_to', $users_list , Input::old('assigned_to', $asset->assigned_to), array('class'=>'select2', 'style'=>'min-width:350px')) }}
-                    {{ $errors->first('assigned_to', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
+                    {{ Form::select('location_id', $location_list , Input::old('location_id', $asset->location_id), array('class'=>'select2', 'style'=>'min-width:350px')) }}
+                    {{ $errors->first('location_id', '<span class="alert-msg"><i class="icon-remove-sign"></i> :message</span>') }}
                 </div>
             </div>
 
@@ -69,11 +69,7 @@
                     <button type="submit" class="btn btn-success"><i class="icon-ok icon-white"></i> @lang('general.save')</button>
                 </div>
             </div>
-
-
-
-</form>
-
-</div>
+        </form>
+    </div>
 </div>
 @stop
