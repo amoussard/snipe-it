@@ -44,6 +44,7 @@ return array(
     'licenses_available'	=> 'licenses available',
     'licenses'				=> 'Licenses',
     'list_all'				=> 'List All',
+    'location'				=> 'Location',
     'locations'				=> 'Locations',
     'logout'				=> 'Logout',
     'manufacturer'			=> 'Manufacturer',
