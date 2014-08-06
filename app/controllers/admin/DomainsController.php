@@ -34,15 +34,50 @@ class DomainsController extends AdminController
     {
         $perPage = Input::get('iDisplayLength');
         $iPage = Input::get('iDisplayStart') / $perPage;
-        $domains = DB::table('domains')->orderBy('name', 'ASC')->skip($iPage * $perPage)->take($perPage)->get();
-        $totalDomainsCount = DB::table('domains')->count();
+        $domainQuery = DB::table('domains')
+            ->select(
+                'domains.id as id',
+                'domains.name as name'
+            )
+            ->skip($iPage * $perPage)
+            ->take($perPage);
+
+        /*
+         * Filters
+         */
+        $domainName = Input::get('domainName');
+        if (!empty($domainName)) {
+            $domainQuery->where('domains.name', 'LIKE', '%'.$domainName.'%');
+        }
+
+        /*
+         * Orders
+         */
+        switch (Input::get('iSortCol_0')) {
+            // Name
+            case 0:
+                $domainQuery->orderBy('domains.name', Input::get('sSortDir_0'));
+                break;
+            default:
+                $domainQuery->orderBy('domains.name', 'asc');
+                break;
+        }
+
+        $domains = $domainQuery->get();
+        $totalDomainsCount = $domainQuery->count();
 
         $aResults = array();
         foreach ($domains as $domain) {
             $aResults[] = array(
                 '<a href="/admin/settings/domains/'.$domain->id.'/view">'.htmlentities($domain->name).'</a>',
-                '<a href="/admin/settings/domains/'.$domain->id.'/edit" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
-                 <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="/admin/settings/domains/'.$domain->id.'/delete" data-content="content" data-title="title" onClick="return false;"><i class="icon-trash icon-white"></i></a>'
+                '<a href="/admin/settings/domains/'.$domain->id.'/edit" class="btn btn-warning">
+                    <i class="icon-pencil icon-white"></i>
+                 </a>
+                 <a class="btn delete btn-danger" href="/admin/settings/domains/'.$domain->id.'/delete"
+                    data-content="'.Lang::get('admin/hardware/message.delete.confirm').'"
+                    data-title="'.Lang::get('general.delete').' '.htmlspecialchars($domain->name).' ?">
+                    <i class="icon-trash icon-white"></i>
+                </a>'
             );
         }
 

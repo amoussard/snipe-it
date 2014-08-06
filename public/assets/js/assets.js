@@ -36,7 +36,7 @@
             var oTable = $el.dataTable({
                 "pageLength": settings.per_page,
                 "aoColumnDefs": aDefs,
-                "aaSorting": [[ 0, "desc" ]],
+                "aaSorting": [[ 0, "asc" ]],
                 "bSort": true,
                 "aoColumns": [
                     null,                   // Mac

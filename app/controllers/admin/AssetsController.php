@@ -67,6 +67,9 @@ class AssetsController extends AdminController
             ->skip($iPage * $perPage)
             ->take($perPage);
 
+        /*
+         * Filters
+         */
         $assetMac = Input::get('assetMac');
         if (!empty($assetMac)) {
             $assetQuery->where('assets.asset_tag', 'LIKE', '%'.$assetMac.'%');
@@ -88,6 +91,9 @@ class AssetsController extends AdminController
             $assetQuery->where('locations.id', '=', Location::NUMEDIA_ID);
         }
 
+        /*
+         * Orders
+         */
         switch (Input::get('iSortCol_0')) {
             // MAC address
             case 0:

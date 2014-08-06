@@ -9,6 +9,7 @@
 
     Components.table = function() {
         var $el = $('#domains-table');
+        var domainName = "";
 
         var render = function() {
             function getTableColumnDefinitions($table) {
@@ -28,10 +29,10 @@
             }
             var aDefs = getTableColumnDefinitions($el);
 
-            $el.dataTable({
+            var oTable = $el.dataTable({
                 "pageLength": settings.per_page,
                 "aoColumnDefs": aDefs,
-                "aaSorting": [[ 0, "desc" ]],
+                "aaSorting": [[ 0, "asc" ]],
                 "bSort": true,
                 "aoColumns": [
                     null,                   // Name
@@ -40,15 +41,23 @@
                 "bPaginate": true,
                 "bAutoWidth": false,
                 "sPaginationType": 'full_numbers',
-                "bFilter": true,
+                "bFilter": false,
                 "sAjaxSource": "/admin/settings/domains/json",
                 "processing": true,
                 "serverSide": true,
                 "fnServerData": function (sSource, aoData, fnCallback, aParams) {
+                    aoData.push(
+                        { 'name': 'domainName', 'value': domainName }
+                    );
                     $.getJSON(sSource, aoData).done(function (data) {
                         fnCallback(data)
                     });
                 }
+            });
+
+            $("#domainName").on('keyup', function(){
+                domainName = $(this).val();
+                oTable.fnDraw();
             });
         };
 

@@ -132,7 +132,6 @@
         var render = function() {
             $('body').on('click', '.delete', function (e) {
                 e.preventDefault();
-                console.log('delete');
                 var $context = $(this);
                 var $dataConfirmModal = $('#dataConfirmModal');
                 var href = $context.attr('href');

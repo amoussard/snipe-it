@@ -17,6 +17,16 @@ Domains ::
 </div>
 
 <div class="row form-wrapper">
+    <div class="row">
+        <form class="form-inline filters-form" role="form">
+            <h4>Filters</h4>
+            <div class="form-group col-md-3">
+                <label class="sr-only" for="domainName">Name</label>
+                <input type="text" id="domainName" name="domainName" class="form-control" placeholder="Enter name" />
+            </div>
+        </form>
+    </div>
+
     <table id="domains-table">
         <thead>
             <tr role="row">
