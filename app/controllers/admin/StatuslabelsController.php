@@ -11,6 +11,7 @@ use Setting;
 use Str;
 use Validator;
 use View;
+use Response;
 
 class StatuslabelsController extends AdminController
 {
@@ -22,13 +23,75 @@ class StatuslabelsController extends AdminController
 
     public function getIndex()
     {
-        // Grab all the statuslabels
-        $statuslabels = Statuslabel::orderBy('created_at', 'DESC')->paginate(10);
-
         // Show the page
         return View::make('backend/statuslabels/index', compact('statuslabels'));
     }
 
+    /**
+     *
+     * @return Response
+     */
+    public function getJsonList()
+    {
+        $perPage = Input::get('iDisplayLength');
+        $iPage = Input::get('iDisplayStart') / $perPage;
+        $statusQuery = DB::table('status_labels')
+            ->select(
+                'status_labels.id as id',
+                'status_labels.name as name'
+            )
+            ->where('status_labels.deleted_at', '=', NULL)
+            ->skip($iPage * $perPage)
+            ->take($perPage);
+
+        /*
+         * Filters
+         */
+        $statusName = Input::get('statusLabelName');
+        if (!empty($statusName)) {
+            $statusQuery->where('status_labels.name', 'LIKE', '%'.$statusName.'%');
+        }
+
+        /*
+         * Orders
+         */
+        switch (Input::get('iSortCol_0')) {
+            // Name
+            case 0:
+                $statusQuery->orderBy('status_labels.name', Input::get('sSortDir_0'));
+                break;
+            default:
+                $statusQuery->orderBy('status_labels.name', 'asc');
+                break;
+        }
+
+        $statusLabels = $statusQuery->get();
+        $totalStatusLabelsCount = $statusQuery->count();
+
+        $aResults = array();
+        foreach ($statusLabels as $statusLabel) {
+            $aResults[] = array(
+                '<a href="/admin/settings/statuslabels/'.$statusLabel->id.'/view">'.htmlentities($statusLabel->name).'</a>',
+                '<a href="/admin/settings/statuslabels/'.$statusLabel->id.'/edit" class="btn btn-warning">
+                    <i class="icon-pencil icon-white"></i>
+                 </a>
+                 <a class="btn delete btn-danger" href="/admin/settings/statuslabels/'.$statusLabel->id.'/delete"
+                    data-content="'.Lang::get('admin/statuslabels/message.delete.confirm').'"
+                    data-title="'.Lang::get('general.delete').' '.htmlspecialchars($statusLabel->name).' ?">
+                    <i class="icon-trash icon-white"></i>
+                 </a>'
+            );
+        }
+
+        $aResponse = array(
+            'draw' => Input::get('sEcho'),
+            'recordsTotal' => $totalStatusLabelsCount,
+            'recordsFiltered' => $totalStatusLabelsCount,
+            'data' => $aResults,
+        );
+
+        return Response::json($aResponse);
+    }
 
     /**
      * Statuslabel create.
