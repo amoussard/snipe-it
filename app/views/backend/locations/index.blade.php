@@ -18,40 +18,52 @@ Locations ::
 
 <div class="row form-wrapper">
 
-<table id="locations-table">
-    <thead>
-        <tr role="row">
-            <th class="col-md-3">@lang('admin/locations/table.name')</th>
-            <th class="col-md-3">@lang('admin/locations/table.address')</th>
-            <th class="col-md-2">@lang('admin/locations/table.city'),
-             @lang('admin/locations/table.state')
-            @lang('admin/locations/table.country')</th>
-            <th class="col-md-2 actions">@lang('table.actions')</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{--
-        @foreach ($locations as $location)
-        <tr>
-            <td>
-                <a href="{{{ route('view/location', $location->id) }}}">
-                    {{{ $location->name }}}
-                </a>
-            </td>
-            <td>{{{ $location->address }}}, {{{ $location->address2 }}}  </td>
-            <td>{{{ $location->city }}}, {{{ $location->state }}}  {{{ $location->country }}}  </td>
-            <td>
-                <a href="{{ route('update/location', $location->id) }}" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
-                <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="{{ route('delete/location', $location->id) }}" data-content="@lang('admin/locations/message.delete.confirm')"
-                data-title="@lang('general.delete')
-                 {{ htmlspecialchars($location->name) }}?" onClick="return false;"><i class="icon-trash icon-white"></i></a>
+    <div class="row">
+        <form class="form-inline filters-form" role="form">
+            <h4>Filters</h4>
+            <div class="form-group col-md-3">
+                <label class="sr-only" for="locationName">Name</label>
+                <input type="text" id="locationName" name="locationName" class="form-control" placeholder="Enter name" />
+            </div>
+        </form>
+    </div>
 
-            </td>
-        </tr>
-        @endforeach
-    --}}
-    </tbody>
-</table>
+    <table id="locations-table">
+        <thead>
+            <tr role="row">
+                <th class="col-md-3">@lang('admin/locations/table.name')</th>
+                <th class="col-md-3">@lang('admin/locations/table.address')</th>
+                <th class="col-md-2">
+                    @lang('admin/locations/table.city'),
+                    @lang('admin/locations/table.state')
+                    @lang('admin/locations/table.country')
+                </th>
+                <th class="col-md-2 actions">@lang('table.actions')</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{--
+            @foreach ($locations as $location)
+            <tr>
+                <td>
+                    <a href="{{{ route('view/location', $location->id) }}}">
+                        {{{ $location->name }}}
+                    </a>
+                </td>
+                <td>{{{ $location->address }}}, {{{ $location->address2 }}}  </td>
+                <td>{{{ $location->city }}}, {{{ $location->state }}}  {{{ $location->country }}}  </td>
+                <td>
+                    <a href="{{ route('update/location', $location->id) }}" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
+                    <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="{{ route('delete/location', $location->id) }}" data-content="@lang('admin/locations/message.delete.confirm')"
+                    data-title="@lang('general.delete')
+                     {{ htmlspecialchars($location->name) }}?" onClick="return false;"><i class="icon-trash icon-white"></i></a>
+
+                </td>
+            </tr>
+            @endforeach
+        --}}
+        </tbody>
+    </table>
 </div>
 
 

@@ -36,12 +36,39 @@ class LocationsController extends AdminController
     {
         $perPage = Input::get('iDisplayLength');
         $iPage = Input::get('iDisplayStart') / $perPage;
-        $locations = DB::table('locations')
-            ->select('id', 'name', DB::raw('CONCAT(address, ", ", address2) AS address'), DB::raw('CONCAT(city, ", ", state, " ", country) AS city'))
-            ->orderBy('name', 'ASC')
+        $locationQuery = DB::table('locations')
+            ->select(
+                'locations.id as id',
+                'locations.name as name',
+                DB::raw('CONCAT(locations.address, ", ", locations.address2) AS address'),
+                DB::raw('CONCAT(locations.city, ", ", locations.state, " ", locations.country) AS city')
+            )
             ->skip($iPage * $perPage)
-            ->take($perPage)->get();
-        $totalLocationsCount = DB::table('locations')->count();
+            ->take($perPage);
+
+        /*
+         * Filters
+         */
+        $locationName = Input::get('locationName');
+        if (!empty($locationName)) {
+            $locationQuery->where('locations.name', 'LIKE', '%'.$locationName.'%');
+        }
+
+        /*
+         * Orders
+         */
+        switch (Input::get('iSortCol_0')) {
+            // Name
+            case 0:
+                $locationQuery->orderBy('locations.name', Input::get('sSortDir_0'));
+                break;
+            default:
+                $locationQuery->orderBy('locations.name', 'asc');
+                break;
+        }
+
+        $locations = $locationQuery->get();
+        $totalLocationsCount = $locationQuery->count();
 
         $aResults = array();
         foreach ($locations as $location) {
@@ -49,8 +76,14 @@ class LocationsController extends AdminController
                 '<a href="/admin/settings/locations/'.$location->id.'/view">'.htmlentities($location->name).'</a>',
                 htmlentities($location->address),
                 htmlentities($location->city),
-                '<a href="/admin/settings/locations/'.$location->id.'/edit" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
-                 <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="/admin/settings/locations/'.$location->id.'/delete" data-content="content" data-title="title" onClick="return false;"><i class="icon-trash icon-white"></i></a>'
+                '<a href="/admin/settings/locations/'.$location->id.'/edit" class="btn btn-warning">
+                    <i class="icon-pencil icon-white"></i>
+                 </a>
+                 <a class="btn delete btn-danger" href="/admin/settings/locations/'.$location->id.'/delete"
+                    data-content="'.Lang::get('admin/locations/message.delete.confirm').'"
+                    data-title="'.Lang::get('general.delete').' '.htmlspecialchars($location->name).' ?">
+                    <i class="icon-trash icon-white"></i>
+                 </a>'
             );
         }
 

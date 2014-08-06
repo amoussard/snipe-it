@@ -39,6 +39,7 @@ class DomainsController extends AdminController
                 'domains.id as id',
                 'domains.name as name'
             )
+            ->where('domains.deleted_at', '=', NULL)
             ->skip($iPage * $perPage)
             ->take($perPage);
 
@@ -74,7 +75,7 @@ class DomainsController extends AdminController
                     <i class="icon-pencil icon-white"></i>
                  </a>
                  <a class="btn delete btn-danger" href="/admin/settings/domains/'.$domain->id.'/delete"
-                    data-content="'.Lang::get('admin/hardware/message.delete.confirm').'"
+                    data-content="'.Lang::get('admin/domains/message.delete.confirm').'"
                     data-title="'.Lang::get('general.delete').' '.htmlspecialchars($domain->name).' ?">
                     <i class="icon-trash icon-white"></i>
                 </a>'

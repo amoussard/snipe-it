@@ -9,6 +9,7 @@
 
     Components.table = function() {
         var $el = $('#locations-table');
+        var locationName = "";
 
         var render = function() {
             function getTableColumnDefinitions($table) {
@@ -28,10 +29,10 @@
             }
             var aDefs = getTableColumnDefinitions($el);
 
-            $el.dataTable({
+            var oTable = $el.dataTable({
                 "pageLength": settings.per_page,
                 "aoColumnDefs": aDefs,
-                "aaSorting": [[ 0, "desc" ]],
+                "aaSorting": [[ 0, "asc" ]],
                 "bSort": true,
                 "aoColumns": [
                     null,                   // Name
@@ -47,10 +48,18 @@
                 "processing": true,
                 "serverSide": true,
                 "fnServerData": function (sSource, aoData, fnCallback, aParams) {
+                    aoData.push(
+                        { 'name': 'locationName', 'value': locationName }
+                    );
                     $.getJSON(sSource, aoData).done(function (data) {
                         fnCallback(data)
                     });
                 }
+            });
+
+            $("#locationName").on('keyup', function(){
+                locationName = $(this).val();
+                oTable.fnDraw();
             });
         };
 

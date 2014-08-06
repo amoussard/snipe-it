@@ -35,25 +35,6 @@ Domains ::
             </tr>
         </thead>
         <tbody>
-        {{--
-            @foreach ($domains as $domain)
-                <tr>
-                    <td>
-                        <a href="{{ route('view/domain', $domain->id) }}">
-                            {{{ $domain->name }}}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ route('update/domain', $domain->id) }}" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
-                        <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal"
-                           href="{{ route('delete/domain', $domain->id) }}" data-content="@lang('admin/domains/message.delete.confirm')"
-                            data-title="@lang('general.delete')
-                         {{ htmlspecialchars($domain->name) }}?" onClick="return false;"><i class="icon-trash icon-white"></i></a>
-
-                    </td>
-                </tr>
-            @endforeach
-        --}}
         </tbody>
     </table>
 </div>
