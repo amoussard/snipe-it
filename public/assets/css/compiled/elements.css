@@ -675,3 +675,20 @@
     -moz-transform: translateY(0);
   }
 }
+
+
+/* NUMEDIA */
+
+.dataTables_wrapper {
+    margin-top: 30px;
+}
+
+.filters-form h4 {
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+.filters-form .checkbox label {
+    margin-top: 7px;
+    display: inline-block;
+}

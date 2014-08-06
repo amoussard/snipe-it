@@ -36,32 +36,10 @@ class AssetsController extends AdminController
 
     public function getIndex()
     {
-        // Grab all the assets
+        $model_list = array('-1' => 'Choose a model') + Model::orderBy('name', 'asc')->lists('name', 'id');
 
-        // Filter results
-//        if (Input::get('Pending')) {
-//            $assets = Asset::orderBy('asset_tag', 'ASC')->whereNull('status_id','and')->where('assigned_to','=','0')->where('physical', '=', 1)->get();
-//        } elseif (Input::get('RTD')) {
-//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '=', 0)->where('assigned_to','=','0')->where('physical', '=', 1)->get();
-//        } elseif (Input::get('Undeployable')) {
-//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '>', 1)->where('physical', '=', 1)->get();
-//        } elseif (Input::get('Deployed')) {
-//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '=', 0)->where('assigned_to','>','0')->where('physical', '=', 1)->get();
-//        } else {
-//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('physical', '=', 1)->get();
-//        }
-
-        // Paginate the users
-        /**$assets = $assets->paginate(Setting::getSettings()->per_page)
-            ->appends(array(
-                'Pending' => Input::get('Pending'),
-                'RTD' => Input::get('RTD'),
-                'Undeployable' => Input::get('Undeployable'),
-                'Deployed' => Input::get('Deployed'),
-            ));
-        **/
-
-        return View::make('backend/hardware/index');
+        return View::make('backend/hardware/index')
+            ->with('model_list', $model_list);
     }
 
     /**
@@ -72,7 +50,7 @@ class AssetsController extends AdminController
     {
         $perPage = Input::get('iDisplayLength');
         $iPage = Input::get('iDisplayStart') / $perPage;
-        $assets = DB::table('assets')
+        $assetQuery = DB::table('assets')
             ->select(
                 'assets.id as id',
                 'assets.asset_tag as mac_address',
@@ -85,10 +63,59 @@ class AssetsController extends AdminController
             )
             ->leftJoin('models', 'models.id', '=', 'assets.model_id')
             ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
-            ->orderBy('assets.name', 'ASC')
+            ->where('assets.deleted_at', '=', NULL)
             ->skip($iPage * $perPage)
-            ->take($perPage)->get();
-        $totalAssetsCount = DB::table('assets')->count();
+            ->take($perPage);
+
+        $assetMac = Input::get('assetMac');
+        if (!empty($assetMac)) {
+            $assetQuery->where('assets.asset_tag', 'LIKE', '%'.$assetMac.'%');
+        }
+        $assetName = Input::get('assetName');
+        if (!empty($assetName)) {
+            $assetQuery->where('assets.name', 'LIKE', '%'.$assetName.'%');
+        }
+        $assetLocation = Input::get('assetLocation');
+        if (!empty($assetLocation)) {
+            $assetQuery->where('locations.name', 'LIKE', '%'.$assetLocation.'%');
+        }
+        $assetModel = Input::get('assetModel');
+        if (!empty($assetModel) && $assetModel != -1) {
+            $assetQuery->where('models.id', '=', $assetModel);
+        }
+        $assetNumedia = Input::get('assetNumedia');
+        if ($assetNumedia == 1) {
+            $assetQuery->where('locations.id', '=', Location::NUMEDIA_ID);
+        }
+
+        switch (Input::get('iSortCol_0')) {
+            // MAC address
+            case 0:
+                $assetQuery->orderBy('assets.asset_tag', Input::get('sSortDir_0'));
+                break;
+            // Name
+            case 1:
+                $assetQuery->orderBy('assets.name', Input::get('sSortDir_0'));
+                break;
+            // Model
+            case 2:
+                $assetQuery->orderBy('models.name', Input::get('sSortDir_0'));
+                break;
+            // Status
+            case 3:
+                $assetQuery->orderBy('assets.status_id', Input::get('sSortDir_0'));
+                break;
+            // Location
+            case 4:
+                $assetQuery->orderBy('locations.name', Input::get('sSortDir_0'));
+                break;
+            default:
+                $assetQuery->orderBy('assets.name', 'asc');
+                break;
+        }
+
+        $assets = $assetQuery->get();
+        $totalAssetsCount = $assetQuery->count();
 
         $aResults = array();
         foreach ($assets as $asset) {
@@ -106,8 +133,15 @@ class AssetsController extends AdminController
                     $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkout" class="btn btn-info">checkout</a>';
                 }
             }
-            $aTmp[] = '<a href="/hardware/'.$asset->id.'/edit" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
-                 <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="/hardware/'.$asset->id.'/delete" data-content="content" data-title="title" onClick="return false;"><i class="icon-trash icon-white"></i></a>';
+            $aTmp[] = '
+                <a href="/hardware/'.$asset->id.'/edit" class="btn btn-warning">
+                    <i class="icon-pencil icon-white"></i>
+                </a>
+                <a class="btn delete btn-danger" href="/hardware/'.$asset->id.'/delete"
+                    data-title="'.Lang::get('general.delete').' '.htmlspecialchars($asset->mac_address).' ?"
+                    data-content="'.Lang::get('admin/hardware/message.delete.confirm').'">
+                    <i class="icon-trash icon-white"></i>
+                </a>';
 
             $aResults[] = $aTmp;
         }

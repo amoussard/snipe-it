@@ -2,7 +2,7 @@
 
 return array(
 
-    'asset_tag'   	=> 'Mac Address',
+    'mac_address'  	=> 'Mac Address',
     'book_value'  	=> 'Value',
     'change' 		=> 'In/Out',
     'checkoutto' 	=> 'Checked Out',
@@ -15,6 +15,7 @@ return array(
     'purchase_date'	=> 'Purchased',
     'serial'   		=> 'Serial',
     'status'   		=> 'Status',
-    'title'      	=> 'Asset ',
+    'name'      	=> 'Name ',
+    'model'      	=> 'Model ',
 
 );

@@ -9,6 +9,11 @@
 
     Components.table = function() {
         var $el = $('#assets-table');
+        var assetMac = "";
+        var assetName = "";
+        var assetLocation = "";
+        var assetModel = "";
+        var assetNumedia = 0;
 
         var render = function() {
             function getTableColumnDefinitions($table) {
@@ -28,7 +33,7 @@
             }
             var aDefs = getTableColumnDefinitions($el);
 
-            $el.dataTable({
+            var oTable = $el.dataTable({
                 "pageLength": settings.per_page,
                 "aoColumnDefs": aDefs,
                 "aaSorting": [[ 0, "desc" ]],
@@ -36,21 +41,56 @@
                 "aoColumns": [
                     null,                   // Mac
                     null,                   // Name
-                    null,                   // Nb
+                    null,                   // Model
+                    null,                   // Status
+                    null,                   // Location
+                    { "bSortable": false }, // In/out
                     { "bSortable": false }  // Actions
                 ],
                 "bPaginate": true,
                 "bAutoWidth": false,
                 "sPaginationType": 'full_numbers',
-                "bFilter": true,
+                "bFilter": false,
                 "sAjaxSource": "/hardware/json",
                 "processing": true,
                 "serverSide": true,
                 "fnServerData": function (sSource, aoData, fnCallback, aParams) {
+                    aoData.push(
+                        { 'name': 'assetMac', 'value': assetMac },
+                        { 'name': 'assetName', 'value': assetName },
+                        { 'name': 'assetLocation', 'value': assetLocation },
+                        { 'name': 'assetModel', 'value': assetModel },
+                        { 'name': 'assetNumedia', 'value': assetNumedia }
+                    );
                     $.getJSON(sSource, aoData).done(function (data) {
-                        fnCallback(data)
+                        fnCallback(data);
                     });
                 }
+            });
+
+            $("#assetMac").on('keyup', function(){
+                assetMac = $(this).val();
+                oTable.fnDraw();
+            });
+            $("#assetName").on('keyup', function(){
+                assetName = $(this).val();
+                oTable.fnDraw();
+            });
+            $("#assetLocation").on('keyup', function(){
+                assetLocation = $(this).val();
+                oTable.fnDraw();
+            });
+            $("#assetModel").on('change', function(){
+                assetModel = $(this).val();
+                oTable.fnDraw();
+            });
+            $("#assetNumedia").on('click', function(){
+                if ($(this).is(':checked')) {
+                    assetNumedia = 1;
+                } else {
+                    assetNumedia = 0;
+                }
+                oTable.fnDraw();
             });
         };
 

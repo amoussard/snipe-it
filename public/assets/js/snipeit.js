@@ -129,10 +129,10 @@
 
     // confirm delete modal
     Components.modals.confirmDelete = function() {
-        var $el = $('.delete-asset');
-
-        var events = {
-            'click': function(evnt) {
+        var render = function() {
+            $('body').on('click', '.delete', function (e) {
+                e.preventDefault();
+                console.log('delete');
                 var $context = $(this);
                 var $dataConfirmModal = $('#dataConfirmModal');
                 var href = $context.attr('href');
@@ -145,11 +145,7 @@
                 $dataConfirmModal.modal({
                     show: true
                 });
-            }
-        };
-
-        var render = function() {
-            $el.on('click', events['click']);
+            });
         };
 
         return {
@@ -165,7 +161,7 @@
     $(function() {
 //        new Components.example().render();
 //        new Components.nosorting().render();
-        new Components.pluginStyles().render();
+//        new Components.pluginStyles().render();
         new Components.datepicker().render();
         new Components.select2().render();
         new Components.knob().render();
