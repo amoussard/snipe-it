@@ -18,7 +18,7 @@ Locations ::
 
 <div class="row form-wrapper">
 
-<table id="example">
+<table id="locations-table">
     <thead>
         <tr role="row">
             <th class="col-md-3">@lang('admin/locations/table.name')</th>
@@ -30,6 +30,7 @@ Locations ::
         </tr>
     </thead>
     <tbody>
+    {{--
         @foreach ($locations as $location)
         <tr>
             <td>
@@ -48,6 +49,7 @@ Locations ::
             </td>
         </tr>
         @endforeach
+    --}}
     </tbody>
 </table>
 </div>

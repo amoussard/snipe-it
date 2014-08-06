@@ -357,6 +357,10 @@
     <script src="{{ asset('assets/js/jquery.uniform.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.datepicker.js') }}"></script>
     <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script src="{{ asset('assets/js/domains.js') }}"></script>
+    <script src="{{ asset('assets/js/locations.js') }}"></script>
+    <script src="{{ asset('assets/js/models.js') }}"></script>
+    <script src="{{ asset('assets/js/assets.js') }}"></script>
     <script src="{{ asset('assets/js/snipeit.js') }}"></script>
 
 

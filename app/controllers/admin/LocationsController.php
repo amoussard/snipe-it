@@ -12,6 +12,7 @@ use Sentry;
 use Str;
 use Validator;
 use View;
+use Response;
 
 class LocationsController extends AdminController
 {
@@ -23,12 +24,44 @@ class LocationsController extends AdminController
 
     public function getIndex()
     {
-        // Grab all the locations
-        // $locations = Location::orderBy('created_at', 'DESC')->paginate(Setting::getSettings()->per_page);
-        $locations = Location::orderBy('created_at', 'DESC')->get();
-
         // Show the page
-        return View::make('backend/locations/index', compact('locations'));
+        return View::make('backend/locations/index');
+    }
+
+    /**
+     *
+     * @return Response
+     */
+    public function getJsonList()
+    {
+        $perPage = Input::get('iDisplayLength');
+        $iPage = Input::get('iDisplayStart') / $perPage;
+        $locations = DB::table('locations')
+            ->select('id', 'name', DB::raw('CONCAT(address, ", ", address2) AS address'), DB::raw('CONCAT(city, ", ", state, " ", country) AS city'))
+            ->orderBy('name', 'ASC')
+            ->skip($iPage * $perPage)
+            ->take($perPage)->get();
+        $totalLocationsCount = DB::table('locations')->count();
+
+        $aResults = array();
+        foreach ($locations as $location) {
+            $aResults[] = array(
+                '<a href="/admin/settings/locations/'.$location->id.'/view">'.htmlentities($location->name).'</a>',
+                htmlentities($location->address),
+                htmlentities($location->city),
+                '<a href="/admin/settings/locations/'.$location->id.'/edit" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
+                 <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="/admin/settings/locations/'.$location->id.'/delete" data-content="content" data-title="title" onClick="return false;"><i class="icon-trash icon-white"></i></a>'
+            );
+        }
+
+        $aResponse = array(
+            'draw' => Input::get('sEcho'),
+            'recordsTotal' => $totalLocationsCount,
+            'recordsFiltered' => $totalLocationsCount,
+            'data' => $aResults,
+        );
+
+        return Response::json($aResponse);
     }
 
 
@@ -90,7 +123,6 @@ class LocationsController extends AdminController
 
         // Redirect to the location create page
         return Redirect::to('admin/settings/locations/create')->with('error', Lang::get('admin/locations/message.create.error'));
-
     }
 
 

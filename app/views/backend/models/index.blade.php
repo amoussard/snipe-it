@@ -17,19 +17,20 @@
 </div>
 
 <div class="row form-wrapper">
-<table id="example">
+<table id="models-table">
     <thead>
         <tr role="row">
             <th class="col-md-3">@lang('admin/models/table.title')</th>
-            <th class="col-md-2">@lang('admin/models/table.modelnumber')</th>
+            {{--<th class="col-md-2">@lang('admin/models/table.modelnumber')</th>--}}
             <th class="col-md-1">@lang('admin/models/table.numassets')</th>
-            <th class="col-md-2">@lang('general.depreciation')</th>
-            <th class="col-md-2">@lang('general.category')</th>
-            <th class="col-md-2">@lang('general.eol')</th>
+            {{--<th class="col-md-2">@lang('general.depreciation')</th>--}}
+            {{--<th class="col-md-2">@lang('general.category')</th>--}}
+            {{--<th class="col-md-2">@lang('general.eol')</th>--}}
             <th class="col-md-2 actions">@lang('table.actions')</th>
         </tr>
     </thead>
     <tbody>
+    {{--
         @foreach ($models as $model)
         <tr>
             <td><a href="{{ route('view/model', $model->id) }}">{{{ $model->name }}}</a></td>
@@ -69,6 +70,7 @@
             </td>
         </tr>
         @endforeach
+    --}}
     </tbody>
 </table>
 

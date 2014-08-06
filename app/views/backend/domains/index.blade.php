@@ -17,14 +17,15 @@ Domains ::
 </div>
 
 <div class="row form-wrapper">
-    <table id="example">
+    <table id="domains-table">
         <thead>
             <tr role="row">
-                <th class="col-md-3">@lang('admin/domains/table.name')</th>
-                <th class="col-md-2 actions">@lang('table.actions')</th>
+                <th class="col-md-3" data-title="name">@lang('admin/domains/table.name')</th>
+                <th class="col-md-2 actions" data-title="action">@lang('table.actions')</th>
             </tr>
         </thead>
         <tbody>
+        {{--
             @foreach ($domains as $domain)
                 <tr>
                     <td>
@@ -42,6 +43,7 @@ Domains ::
                     </td>
                 </tr>
             @endforeach
+        --}}
         </tbody>
     </table>
 </div>

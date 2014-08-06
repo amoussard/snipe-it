@@ -13,6 +13,7 @@ Route::group(array('prefix' => 'hardware'), function () {
 
     Route::get('/', array('as' => '', 'uses' => 'Controllers\Admin\AssetsController@getIndex'));
     Route::get('/', array('as' => 'hardware', 'uses' => 'Controllers\Admin\AssetsController@getIndex'));
+    Route::get('json', array('as' => 'json/hardware', 'uses' => 'Controllers\Admin\AssetsController@getJsonList'));
     Route::get('create', array('as' => 'create/hardware', 'uses' => 'Controllers\Admin\AssetsController@getCreate'));
     Route::post('create', 'Controllers\Admin\AssetsController@postCreate');
     Route::get('{assetId}/edit', array('as' => 'update/hardware', 'uses' => 'Controllers\Admin\AssetsController@getEdit'));
@@ -31,6 +32,7 @@ Route::group(array('prefix' => 'hardware'), function () {
 # Asset Model Management
     Route::group(array('prefix' => 'models'), function () {
         Route::get('/', array('as' => 'models', 'uses' => 'Controllers\Admin\ModelsController@getIndex'));
+        Route::get('json', array('as' => 'json/models', 'uses' => 'Controllers\Admin\ModelsController@getJsonList'));
         Route::get('create', array('as' => 'create/model', 'uses' => 'Controllers\Admin\ModelsController@getCreate'));
         Route::post('create', 'Controllers\Admin\ModelsController@postCreate');
         Route::get('{modelId}/edit', array('as' => 'update/model', 'uses' => 'Controllers\Admin\ModelsController@getEdit'));
@@ -125,6 +127,7 @@ Route::group(array('prefix' => 'admin'), function () {
         # Domains
         Route::group(array('prefix' => 'domains'), function () {
             Route::get('/', array('as' => 'domains', 'uses' => 'Controllers\Admin\DomainsController@getIndex'));
+            Route::get('json', array('as' => 'json/domains', 'uses' => 'Controllers\Admin\DomainsController@getJsonList'));
             Route::get('create', array('as' => 'create/domain', 'uses' => 'Controllers\Admin\DomainsController@getCreate'));
             Route::post('create', 'Controllers\Admin\DomainsController@postCreate');
             Route::get('{domainId}/edit', array('as' => 'update/domain', 'uses' => 'Controllers\Admin\DomainsController@getEdit'));
@@ -136,6 +139,7 @@ Route::group(array('prefix' => 'admin'), function () {
         # Locations
         Route::group(array('prefix' => 'locations'), function () {
             Route::get('/', array('as' => 'locations', 'uses' => 'Controllers\Admin\LocationsController@getIndex'));
+            Route::get('json', array('as' => 'json/locations', 'uses' => 'Controllers\Admin\LocationsController@getJsonList'));
             Route::get('create', array('as' => 'create/location', 'uses' => 'Controllers\Admin\LocationsController@getCreate'));
             Route::post('create', 'Controllers\Admin\LocationsController@postCreate');
             Route::get('{locationId}/edit', array('as' => 'update/location', 'uses' => 'Controllers\Admin\LocationsController@getEdit'));

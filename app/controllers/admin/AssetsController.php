@@ -39,17 +39,17 @@ class AssetsController extends AdminController
         // Grab all the assets
 
         // Filter results
-        if (Input::get('Pending')) {
-            $assets = Asset::orderBy('asset_tag', 'ASC')->whereNull('status_id','and')->where('assigned_to','=','0')->where('physical', '=', 1)->get();
-        } elseif (Input::get('RTD')) {
-            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '=', 0)->where('assigned_to','=','0')->where('physical', '=', 1)->get();
-        } elseif (Input::get('Undeployable')) {
-            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '>', 1)->where('physical', '=', 1)->get();
-        } elseif (Input::get('Deployed')) {
-            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '=', 0)->where('assigned_to','>','0')->where('physical', '=', 1)->get();
-        } else {
-            $assets = Asset::orderBy('asset_tag', 'ASC')->where('physical', '=', 1)->get();
-        }
+//        if (Input::get('Pending')) {
+//            $assets = Asset::orderBy('asset_tag', 'ASC')->whereNull('status_id','and')->where('assigned_to','=','0')->where('physical', '=', 1)->get();
+//        } elseif (Input::get('RTD')) {
+//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '=', 0)->where('assigned_to','=','0')->where('physical', '=', 1)->get();
+//        } elseif (Input::get('Undeployable')) {
+//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '>', 1)->where('physical', '=', 1)->get();
+//        } elseif (Input::get('Deployed')) {
+//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('status_id', '=', 0)->where('assigned_to','>','0')->where('physical', '=', 1)->get();
+//        } else {
+//            $assets = Asset::orderBy('asset_tag', 'ASC')->where('physical', '=', 1)->get();
+//        }
 
         // Paginate the users
         /**$assets = $assets->paginate(Setting::getSettings()->per_page)
@@ -61,7 +61,65 @@ class AssetsController extends AdminController
             ));
         **/
 
-        return View::make('backend/hardware/index', compact('assets'));
+        return View::make('backend/hardware/index');
+    }
+
+    /**
+     *
+     * @return Response
+     */
+    public function getJsonList()
+    {
+        $perPage = Input::get('iDisplayLength');
+        $iPage = Input::get('iDisplayStart') / $perPage;
+        $assets = DB::table('assets')
+            ->select(
+                'assets.id as id',
+                'assets.asset_tag as mac_address',
+                'assets.name as name',
+                'models.id as model_id',
+                'models.name as model_name',
+                'assets.status_id as status',
+                'locations.name as location_name',
+                'locations.id as location_id'
+            )
+            ->leftJoin('models', 'models.id', '=', 'assets.model_id')
+            ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+            ->orderBy('assets.name', 'ASC')
+            ->skip($iPage * $perPage)
+            ->take($perPage)->get();
+        $totalAssetsCount = DB::table('assets')->count();
+
+        $aResults = array();
+        foreach ($assets as $asset) {
+            $aTmp = array(
+                '<a href="/hardware/'.$asset->id.'/view">'.htmlentities($asset->mac_address).'</a>',
+                '<a href="/hardware/'.$asset->id.'/view">'.htmlentities($asset->name).'</a>',
+                '<a href="/hardware/models/'.$asset->model_id.'/view">'.htmlentities($asset->model_name).'</a>',
+                $asset->status,
+                '<a href="/admin/settings/locations/'.$asset->location_id.'/view">'.htmlentities($asset->location_name).'</a>',
+            );
+            if ($asset->status < 1) {
+                if ($asset->location_id != Location::NUMEDIA_ID) {
+                    $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkin" class="btn btn-primary">checkin</a>';
+                } else {
+                    $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkout" class="btn btn-info">checkout</a>';
+                }
+            }
+            $aTmp[] = '<a href="/hardware/'.$asset->id.'/edit" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
+                 <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="/hardware/'.$asset->id.'/delete" data-content="content" data-title="title" onClick="return false;"><i class="icon-trash icon-white"></i></a>';
+
+            $aResults[] = $aTmp;
+        }
+
+        $aResponse = array(
+            'draw' => Input::get('sEcho'),
+            'recordsTotal' => $totalAssetsCount,
+            'recordsFiltered' => $totalAssetsCount,
+            'data' => $aResults,
+        );
+
+        return Response::json($aResponse);
     }
 
     public function getReports()

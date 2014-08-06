@@ -11,6 +11,7 @@ use Sentry;
 use Str;
 use Validator;
 use View;
+use Response;
 
 class DomainsController extends AdminController
 {
@@ -19,15 +20,40 @@ class DomainsController extends AdminController
      *
      * @return View
      */
-
     public function getIndex()
     {
-        // Grab all the locations
-        // $domains = Domain::orderBy('created_at', 'DESC')->paginate(Setting::getSettings()->per_page);
-        $domains = Domain::orderBy('created_at', 'DESC')->get();
-
         // Show the page
-        return View::make('backend/domains/index', compact('domains'));
+        return View::make('backend/domains/index');
+    }
+
+    /**
+     *
+     * @return Response
+     */
+    public function getJsonList()
+    {
+        $perPage = Input::get('iDisplayLength');
+        $iPage = Input::get('iDisplayStart') / $perPage;
+        $domains = DB::table('domains')->orderBy('name', 'ASC')->skip($iPage * $perPage)->take($perPage)->get();
+        $totalDomainsCount = DB::table('domains')->count();
+
+        $aResults = array();
+        foreach ($domains as $domain) {
+            $aResults[] = array(
+                '<a href="/admin/settings/domains/'.$domain->id.'/view">'.htmlentities($domain->name).'</a>',
+                '<a href="/admin/settings/domains/'.$domain->id.'/edit" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
+                 <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="/admin/settings/domains/'.$domain->id.'/delete" data-content="content" data-title="title" onClick="return false;"><i class="icon-trash icon-white"></i></a>'
+            );
+        }
+
+        $aResponse = array(
+            'draw' => Input::get('sEcho'),
+            'recordsTotal' => $totalDomainsCount,
+            'recordsFiltered' => $totalDomainsCount,
+            'data' => $aResults,
+        );
+
+        return Response::json($aResponse);
     }
 
 

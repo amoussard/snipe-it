@@ -13,6 +13,7 @@ use Manufacturer;
 use Str;
 use Validator;
 use View;
+use Response;
 
 class ModelsController extends AdminController
 {
@@ -25,10 +26,47 @@ class ModelsController extends AdminController
     {
         // Grab all the models
         // $models = Model::orderBy('created_at', 'DESC')->paginate(Setting::getSettings()->per_page);
-        $models = Model::orderBy('created_at', 'DESC')->get();
+//        $models = Model::orderBy('created_at', 'DESC')->get();
 
         // Show the page
         return View::make('backend/models/index', compact('models'));
+    }
+
+    /**
+     *
+     * @return Response
+     */
+    public function getJsonList()
+    {
+        $perPage = Input::get('iDisplayLength');
+        $iPage = Input::get('iDisplayStart') / $perPage;
+        $models = DB::table('models')
+            ->select('models.id', 'models.name', DB::raw('COUNT(assets.id) as nb'))
+            ->leftJoin('assets', 'models.id', '=', 'assets.model_id')
+            ->groupBy('models.id')
+            ->orderBy('name', 'ASC')
+            ->skip($iPage * $perPage)
+            ->take($perPage)->get();
+        $totalModelsCount = DB::table('models')->count();
+
+        $aResults = array();
+        foreach ($models as $model) {
+            $aResults[] = array(
+                '<a href="/hardware/models/'.$model->id.'/view">'.htmlentities($model->name).'</a>',
+                htmlentities($model->nb),
+                '<a href="/hardware/models/'.$model->id.'/edit" class="btn btn-warning"><i class="icon-pencil icon-white"></i></a>
+                 <a data-html="false" class="btn delete-asset btn-danger" data-toggle="modal" href="/hardware/models/'.$model->id.'/delete" data-content="content" data-title="title" onClick="return false;"><i class="icon-trash icon-white"></i></a>'
+            );
+        }
+
+        $aResponse = array(
+            'draw' => Input::get('sEcho'),
+            'recordsTotal' => $totalModelsCount,
+            'recordsFiltered' => $totalModelsCount,
+            'data' => $aResults,
+        );
+
+        return Response::json($aResponse);
     }
 
 /**
