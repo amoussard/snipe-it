@@ -46,7 +46,7 @@
 
     <div class="col-md-12" style="min-height: 130px;">
 
-        @if ($asset->model->manufacturer)
+        @if ($asset->model && $asset->model->manufacturer)
             <div class="col-md-6"><strong>@lang('admin/hardware/form.manufacturer'): </strong>
             <a href="{{ route('update/manufacturer', $asset->model->manufacturer->id) }}">
             {{{ $asset->model->manufacturer->name }}}
@@ -83,7 +83,7 @@
             {{{ $asset->warrantee_expires() }}}</div>
         @endif
 
-        @if ($asset->depreciation)
+        @if ($asset->model && $asset->depreciation)
             <div class="col-md-6"><strong>@lang('admin/hardware/form.depreciation'): </strong>
             {{ $asset->depreciation->name }}
                 ({{{ $asset->depreciation->months }}}
@@ -101,7 +101,7 @@
              </div>
         @endif
 
-        @if ($asset->model->eol)
+        @if ($asset->model && $asset->model->eol)
             <div class="col-md-6"><strong>@lang('admin/hardware/form.eol_rate'): </strong>
             {{{ $asset->model->eol }}}
             @lang('admin/hardware/form.months') </div>

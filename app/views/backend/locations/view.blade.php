@@ -39,7 +39,7 @@ View Location {{{ $location->name }}} ::
                             @foreach ($location->getAssets as $asset)
                                 <tr>
                                     <td>
-                                        @if ($asset->physical=='1')
+                                        @if ($asset->physical == '1' && $asset->model)
                                             {{{ $asset->model->name }}}
                                         @endif
                                     </td>
