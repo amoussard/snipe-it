@@ -18,154 +18,170 @@
             </button>
             <ul class="dropdown-menu">
 
-                @if ($asset->status_id == 1)
-                    @if ($asset->assigned_to != 0)
-                        <li><a href="{{ route('checkin/hardware', $asset->id) }}">@lang('admin/hardware/general.checkin')</a></li>
-                    @endif
-                @elseif ($asset->status_id == 0)
-                        <li><a href="{{ route('checkout/hardware', $asset->id) }}">@lang('admin/hardware/general.checkout')</a></li>
+                @if ($asset->location_id != Location::NUMEDIA_ID)
+                    <li><a href="{{ route('checkin/hardware', $asset->id) }}">@lang('admin/hardware/general.checkin')</a></li>
+                @else
+                    <li><a href="{{ route('checkout/hardware', $asset->id) }}">@lang('admin/hardware/general.checkout')</a></li>
                 @endif
                 <li><a href="{{ route('update/hardware', $asset->id) }}">@lang('admin/hardware/general.edit')</a></li>
                 <li><a href="{{ route('clone/hardware', $asset->id) }}">@lang('admin/hardware/general.clone')</a></li>
             </ul>
         </div>
-        <h3>
+
         <h3 class="name">
-        @lang('admin/hardware/general.view')
-        {{{ $asset->asset_tag }}}
-        @if ($asset->name)
-        ({{{ $asset->name }}})
-        @endif
-    </h3>
+            @lang('admin/hardware/general.view')
+            {{{ $asset->asset_tag }}}
+            @if ($asset->name)
+                ({{{ $asset->name }}})
+            @endif
+        </h3>
     </div>
 </div>
 
 <div class="user-profile">
-<div class="row profile">
-<div class="col-md-9 bio">
+    <div class="row profile">
+        <div class="col-md-9 bio">
 
-    <div class="col-md-12" style="min-height: 130px;">
+            <div class="col-md-12" style="min-height: 130px;">
 
-        @if ($asset->model && $asset->model->manufacturer)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.manufacturer'): </strong>
-            <a href="{{ route('update/manufacturer', $asset->model->manufacturer->id) }}">
-            {{{ $asset->model->manufacturer->name }}}
-            </a> </div>
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.model'):</strong>
-            <a href="{{ route('view/model', $asset->model->id) }}">
-            {{{ $asset->model->name }}}
-            </a>
-             / {{{ $asset->model->modelno }}}</div>
-        @endif
+                @if ($asset->model && $asset->model->manufacturer)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.manufacturer'): </strong>
+                        <a href="{{ route('update/manufacturer', $asset->model->manufacturer->id) }}">
+                            {{{ $asset->model->manufacturer->name }}}
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.model'):</strong>
+                        <a href="{{ route('view/model', $asset->model->id) }}">
+                            {{{ $asset->model->name }}}
+                        </a>
+                        / {{{ $asset->model->modelno }}}
+                    </div>
+                @endif
 
-        @if ($asset->purchase_date)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.date'): </strong>
-            {{{ $asset->purchase_date }}} </div>
-        @endif
+                @if ($asset->purchase_date)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.date'): </strong>
+                        {{{ $asset->purchase_date }}}
+                    </div>
+                @endif
 
-        @if ($asset->purchase_cost)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.cost'):</strong>
-            @lang('general.currency')
-            {{{ number_format($asset->purchase_cost,2) }}} </div>
-        @endif
+                @if ($asset->purchase_cost)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.cost'):</strong>
+                        @lang('general.currency')
+                        {{{ number_format($asset->purchase_cost,2) }}}
+                    </div>
+                @endif
 
-        @if ($asset->order_number)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.order'):</strong>
-            {{{ $asset->order_number }}} </div>
-        @endif
+                @if ($asset->order_number)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.order'):</strong>
+                        {{{ $asset->order_number }}}
+                    </div>
+                @endif
 
-        @if ($asset->warranty_months)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.warranty'):</strong>
-            {{{ $asset->warranty_months }}}
-            @lang('admin/hardware/form.months')
+                @if ($asset->warranty_months)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.warranty'):</strong>
+                        {{{ $asset->warranty_months }}}
+                        @lang('admin/hardware/form.months')
+                    </div>
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.expires'):</strong>
+                        {{{ $asset->warrantee_expires() }}}
+                    </div>
+                @endif
+
+                @if ($asset->model && $asset->depreciation)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.depreciation'): </strong>
+                        {{ $asset->depreciation->name }}
+                        ({{{ $asset->depreciation->months }}} @lang('admin/hardware/form.months')
+                        )
+                    </div>
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.depreciates_on'): </strong>
+                        {{{ $asset->depreciated_date() }}}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.fully_depreciated'): </strong>
+                        {{{ $asset->months_until_depreciated()->m }}}
+                        @lang('admin/hardware/form.months')
+                        @if ($asset->months_until_depreciated()->y > 0)
+                            , {{{ $asset->months_until_depreciated()->y }}}
+                            @lang('admin/hardware/form.years')
+                        @endif
+                    </div>
+                @endif
+
+                @if ($asset->model && $asset->model->eol)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.eol_rate'): </strong>
+                        {{{ $asset->model->eol }}}
+                        @lang('admin/hardware/form.months')
+                    </div>
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.eol_date'): </strong>
+                        {{{ $asset->eol_date() }}}
+                        @if ($asset->months_until_eol())
+                            (
+                            @if ($asset->months_until_eol()->y > 0) {{{ $asset->months_until_eol()->y }}}
+                                @lang('general.years'),
+                            @endif
+
+                            {{{ $asset->months_until_eol()->m }}}
+                            @lang('general.months')
+                            )
+                        @endif
+                    </div>
+                @endif
+
+                @if ($asset->supplier_id)
+                    <div class="col-md-6">
+                        <strong>@lang('admin/hardware/form.supplier'): </strong>
+                        <a href="{{ route('view/supplier', $asset->supplier_id) }}">
+                            {{{ $asset->supplier->name }}}
+                        </a>
+                    </div>
+                @endif
             </div>
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.expires'):</strong>
-            {{{ $asset->warrantee_expires() }}}</div>
-        @endif
-
-        @if ($asset->model && $asset->depreciation)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.depreciation'): </strong>
-            {{ $asset->depreciation->name }}
-                ({{{ $asset->depreciation->months }}}
-                @lang('admin/hardware/form.months')
-                )</div>
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.depreciates_on'): </strong>
-            {{{ $asset->depreciated_date() }}} </div>
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.fully_depreciated'): </strong>
-            {{{ $asset->months_until_depreciated()->m }}}
-            @lang('admin/hardware/form.months')
-             @if ($asset->months_until_depreciated()->y > 0)
-                , {{{ $asset->months_until_depreciated()->y }}}
-                @lang('admin/hardware/form.years')
-             @endif
-             </div>
-        @endif
-
-        @if ($asset->model && $asset->model->eol)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.eol_rate'): </strong>
-            {{{ $asset->model->eol }}}
-            @lang('admin/hardware/form.months') </div>
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.eol_date'): </strong>
-            {{{ $asset->eol_date() }}}
-            @if ($asset->months_until_eol())
-                 (
-                 @if ($asset->months_until_eol()->y > 0) {{{ $asset->months_until_eol()->y }}}
-                  @lang('general.years'),
-                 @endif
-
-                {{{ $asset->months_until_eol()->m }}}
-                @lang('general.months')
-                )
-            @endif
-            </div>
-        @endif
-
-        @if ($asset->supplier_id)
-            <div class="col-md-6"><strong>@lang('admin/hardware/form.supplier'): </strong>
-            <a href="{{ route('view/supplier', $asset->supplier_id) }}">
-            {{{ $asset->supplier->name }}}
-            </a> </div>
-
-        @endif
-
-
-    </div>
 
 		<!-- Licenses assets table -->
-
         <h6>Software Assigned to {{{ $asset->name }}}</h6>
-		<br>
+
 		<!-- checked out assets table -->
 		@if (count($asset->licenses) > 0)
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th class="col-md-4"><span class="line"></span>@lang('general.name')</th>
-					<th class="col-md-1"><span class="line"></span>@lang('table.actions')</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach ($asset->licenseseats as $seat)
-				<tr>
-					<td><a href="{{ route('view/license', $seat->license->id) }}">{{{ $seat->license->name }}}</a></td>
-					<td><a href="{{ route('checkin/license', $seat->id) }}" class="btn-flat info">@lang('general.checkin')</a>
-					</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-md-4"><span class="line"></span>@lang('general.name')</th>
+                        <th class="col-md-1"><span class="line"></span>@lang('table.actions')</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($asset->licenseseats as $seat)
+                        <tr>
+                            <td><a href="{{ route('view/license', $seat->license->id) }}">{{{ $seat->license->name }}}</a></td>
+                            <td><a href="{{ route('checkin/license', $seat->id) }}" class="btn-flat info">@lang('general.checkin')</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 		@else
-
-		<div class="col-md-12">
-			<div class="alert alert-info alert-block">
-				<i class="icon-info-sign"></i>
-				@lang('general.no_results')
-			</div>
-		</div>
+            <div class="col-md-12">
+                <div class="alert alert-info alert-block">
+                    <i class="icon-info-sign"></i>
+                    @lang('general.no_results')
+                </div>
+            </div>
 		@endif
 
         <!-- checked out assets table -->
 
+        <h6>Logs</h6>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -223,80 +239,32 @@
         </table>
 
 
-        </div>
+    </div>
 
-        <!-- side address column -->
-        <div class="col-md-3 col-xs-12 address pull-right">
+    <!-- side address column -->
+    <div class="col-md-3 col-xs-12 address pull-right">
 
-            @if ($qr_code->display)
+        @if ($qr_code->display)
             <h6>@lang('admin/hardware/form.qr')</h6>
             <p>
                 <img src="{{{ $qr_code->url }}}" />
             </p>
-            @endif
+        @endif
 
-            @if ((isset($asset->assigned_to ) && ($asset->assigned_to > 0)))
-                <h6><br>@lang('admin/hardware/form.checkedout_to')</h6>
-                <ul>
+        <h6>@lang('admin/hardware/form.location')</h6>
 
-                    <li><img src="{{{ $asset->assigneduser->gravatar() }}}" class="img-circle" style="width: 100px; margin-right: 20px;" /><br /><br /></li>
-                    <li><a href="{{ route('view/user', $asset->assigned_to) }}">{{ $asset->assigneduser->fullName() }}</a></li>
+        <iframe width="300" height="133" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?&amp;q={{{ $asset->loc->address }}},{{{ $asset->loc->city }}},{{{ $asset->loc->state }}},{{{ $asset->loc->country }}}&amp;output=embed"></iframe>
+        <ul>
+            <li>{{{ $asset->loc->name }}}</li>
+            <li>{{{ $asset->loc->address }}} {{{ $asset->loc->address2 }}}</li>
+            <li>{{{ $asset->loc->city }}}, {{{ $asset->loc->state }}} {{{ $asset->loc->zip }}}</li>
 
-
-                    @if (isset($asset->assetloc->address))
-                        <li>{{{ $asset->assetloc->address }}}
-                        @if (isset($asset->assetloc->address2)) {{{ $asset->assetloc->address2 }}}
-                        @endif
-                        </li>
-                        @if (isset($asset->assetloc->city))
-                            <li>{{{ $asset->assetloc->city }}}, {{{ $asset->assetloc->state }}} {{{ $asset->assetloc->zip }}}</li>
-                        @endif
-
-                    @endif
-
-                    @if (isset($asset->assigneduser->email))
-                        <li><br /><i class="icon-envelope-alt"></i> <a href="mailto:{{{ $asset->assigneduser->email }}}">{{{ $asset->assigneduser->email }}}</a></li>
-                    @endif
-
-                    @if ((isset($asset->assigneduser->phone)) && ($asset->assigneduser->phone!=''))
-                        <li><i class="icon-phone"></i> {{{ $asset->assigneduser->phone }}}</li>
-                    @endif
-
-                    <li><br /><a href="{{ route('checkin/hardware', $asset->id) }}" class="btn-flat large info ">@lang('admin/hardware/general.checkin')</a></li>
-                    </ul>
-
-            @elseif (($asset->status_id ) && ($asset->status_id > 1))
-
-                @if ($asset->assetstatus)
-                    <h6><br>{{{ $asset->assetstatus->name }}}
-                    @lang('admin/hardware/general.asset')</h6>
-
-                    <div class="col-md-12">
-                    <div class="alert alert-warning alert-block">
-                        <i class="icon-warning-sign"></i>
-                        @lang('admin/hardware/message.undeployable')
-
-                    </div>
-                </div>
-                @endif
-
-            @elseif ($asset->status_id == NULL)
-                    <h6><br>@lang('admin/hardware/general.pending')</h6>
-                    <div class="col-md-12">
-                    <div class="alert alert-info alert-block">
-                        <i class="icon-info-sign"></i>
-                        @lang('admin/hardware/message.undeployable')
-                    </div>
-                </div>
-
+            @if ($asset->location_id != Location::NUMEDIA_ID)
+                <li><a href="{{ route('checkin/hardware', $asset->id) }}" class="btn-flat large info ">@lang('admin/hardware/general.checkin')</a></li>
             @else
-            <h6><br>@lang('admin/hardware/general.checkout')</h6>
-                <ul>
-                    <li>This asset is not checked out to anyone yet. Use the button below to check it out now.</li>
-                    <li><br><br /><a href="{{ route('checkout/hardware', $asset->id) }}" class="btn-flat large success">Checkout Asset</a></li>
-                </ul>
+                <li><a href="{{ route('checkout/hardware', $asset->id) }}" class="btn-flat large success">@lang('admin/hardware/general.checkout')</a></li>
             @endif
-        </div>
+        </ul>
     </div>
 </div>
 @stop

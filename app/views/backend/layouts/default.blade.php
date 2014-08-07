@@ -226,13 +226,8 @@
                 </a>
 
                 <ul class="submenu{{ (Request::is('hardware*') ? ' active' : '') }}">
-                    <li><a href="{{ URL::to('hardware?Deployed=true') }}" {{{ (Request::query('Deployed') ? ' class="active"' : '') }}} >@lang('general.deployed')</a></li>
-                    <li><a href="{{ URL::to('hardware?RTD=true') }}" {{{ (Request::query('RTD') ? ' class="active"' : '') }}} >@lang('general.ready_to_deploy')</a></li>
-                    <li><a href="{{ URL::to('hardware?Pending=true') }}" {{{ (Request::query('Pending') ? ' class="active"' : '') }}} >@lang('general.pending')</a></li>
-                    <li><a href="{{ URL::to('hardware?Undeployable=true') }}" {{{ (Request::query('Undeployable') ? ' class="active"' : '') }}} >@lang('general.undeployable')</a></li>
                     <li><a href="{{ URL::to('hardware') }}">@lang('general.list_all')</a></li>
                     <li><a href="{{ URL::to('hardware/models') }}" {{{ (Request::is('hardware/models*') ? ' class="active"' : '') }}} >@lang('general.asset_models')</a></li>
-
                 </ul>
             </li>
 

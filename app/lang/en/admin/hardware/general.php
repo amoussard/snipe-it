@@ -2,8 +2,8 @@
 
 return array(
     'asset'  					=> 'Asset',
-    'checkin'  					=> 'Checkin Asset',
-    'checkout'  				=> 'Checkout Asset to User',
+    'checkin'  					=> 'Checkin',
+    'checkout'  				=> 'Checkout',
     'clone'  					=> 'Clone Asset',
     'edit'  					=> 'Edit Asset',
     'pending'  					=> 'Pending Asset',
