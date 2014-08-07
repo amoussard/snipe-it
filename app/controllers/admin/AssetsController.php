@@ -137,18 +137,20 @@ class AssetsController extends AdminController
                 '<a href="/hardware/'.$asset->id.'/view">'.htmlentities($asset->mac_address).'</a>',
                 '<a href="/hardware/'.$asset->id.'/view">'.htmlentities($asset->name).'</a>',
                 '<a href="/hardware/models/'.$asset->model_id.'/view">'.htmlentities($asset->model_name).'</a>',
-                $asset->status_name,
+                $asset->status_id
+                    ? '<span class="btn '.Statuslabel::$statusClass[$asset->status_id].'">'.$asset->status_name.'</span>'
+                    : null,
                 '<a href="/admin/settings/locations/'.$asset->location_id.'/view">'.htmlentities($asset->location_name).'</a>',
             );
-            if ($asset->status_id === NULL) {
-                if ($asset->location_id != Location::NUMEDIA_ID) {
-                    $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkin" class="btn btn-primary">checkin</a>';
-                } else {
-                    $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkout" class="btn btn-info">checkout</a>';
-                }
+
+            if (in_array($asset->status_id, Statuslabel::$checkinStatus) && $asset->location_id != Location::NUMEDIA_ID) {
+                $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkin" class="btn btn-primary">checkin</a>';
+            } elseif(in_array($asset->status_id, Statuslabel::$checkoutStatus) && $asset->location_id == Location::NUMEDIA_ID) {
+                $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkout" class="btn btn-info">checkout</a>';
             } else {
                 $aTmp[] = null;
             }
+
             $aTmp[] = '
                 <a href="/hardware/'.$asset->id.'/edit" class="btn btn-warning">
                     <i class="icon-pencil icon-white"></i>
@@ -261,9 +263,7 @@ class AssetsController extends AdminController
         $supplier_list = array('' => '') + Supplier::orderBy('name', 'asc')->lists('name', 'id');
         $location_list = array('' => '') + Location::lists('name', 'id');
         $assigned_to = array('' => 'Select a User') + DB::table('users')->select(DB::raw('concat (first_name," ",last_name) as full_name, id'))->whereNull('deleted_at')->lists('full_name', 'id');
-
-        // Grab the dropdown list of status
-        $statuslabel_list = array('' => Lang::get('general.pending')) + array('0' => Lang::get('general.ready_to_deploy')) + Statuslabel::orderBy('name', 'asc')->lists('name', 'id');
+        $statuslabel_list = Statuslabel::orderBy('name', 'asc')->lists('name', 'id');
 
         return View::make('backend/hardware/edit')
             ->with('supplier_list',$supplier_list)
@@ -283,7 +283,6 @@ class AssetsController extends AdminController
      */
     public function postCreate()
     {
-
         // get the POST data
         $new = Input::all();
 
@@ -292,12 +291,6 @@ class AssetsController extends AdminController
 
         // attempt validation
         if ($asset->validate($new)) {
-
-            if ( e(Input::get('status_id')) == '') {
-                $asset->status_id =  NULL;
-            } else {
-                $asset->status_id = e(Input::get('status_id'));
-            }
 
             if (e(Input::get('warranty_months')) == '') {
                 $asset->warranty_months =  NULL;
@@ -331,12 +324,12 @@ class AssetsController extends AdminController
             $asset->notes            		= e(Input::get('notes'));
             $asset->asset_tag            	= e(Input::get('asset_tag'));
             $asset->supplier_id            	= e(Input::get('supplier_id'));
+            $asset->status_id               = e(Input::get('status_id'));
             $asset->user_id          		= Sentry::getId();
             $asset->archived          			= '0';
             $asset->physical            		= '1';
             $asset->depreciate          		= '0';
             $asset->requestable            	= e(Input::get('requestable'));
-
 
             // Was the asset created?
             if($asset->save()) {
@@ -351,8 +344,6 @@ class AssetsController extends AdminController
 
         // Redirect to the asset create page with an error
         return Redirect::to('assets/create')->with('error', Lang::get('admin/hardware/message.create.error'));
-
-
     }
 
     /**
@@ -375,7 +366,7 @@ class AssetsController extends AdminController
         $location_list = array('' => '') + Location::lists('name', 'id');
 
         // Grab the dropdown list of status
-        $statuslabel_list = array('' => Lang::get('general.pending')) + array('0' => Lang::get('general.ready_to_deploy')) + Statuslabel::orderBy('name', 'asc')->lists('name', 'id');
+        $statuslabel_list = Statuslabel::orderBy('name', 'asc')->lists('name', 'id');
 
         return View::make('backend/hardware/edit', compact('asset'))
             ->with('model_list', $model_list)
@@ -403,12 +394,12 @@ class AssetsController extends AdminController
 
         // Declare the rules for the form validation
         $rules = array(
-        'name'   => 'alpha_space|min:3',
-        'asset_tag'   => 'required|alpha_space|min:3',
-        'model_id'   => 'required',
-        'serial'   => 'alpha_space|min:3',
-        'warranty_months'   => 'integer',
-        'notes'   => 'alpha_space',
+            'name'   => 'alpha_space|min:3',
+            'asset_tag'   => 'required|alpha_space|min:3',
+            'model_id'   => 'required',
+            'serial'   => 'alpha_space|min:3',
+            'warranty_months'   => 'integer',
+            'notes'   => 'alpha_space',
         );
 
         // Create a new validator instance from our validation rules
@@ -420,63 +411,56 @@ class AssetsController extends AdminController
             return Redirect::back()->withInput()->withErrors($validator);
         }
 
-            if (e(Input::get('location_id')) == '') {
-                $asset->location_id =  NULL;
-            } else {
-                $asset->location_id =  e(Input::get('location_id'));
-            }
+        if (e(Input::get('location_id')) == '') {
+            $asset->location_id =  NULL;
+        } else {
+            $asset->location_id =  e(Input::get('location_id'));
+        }
 
-            if ( e(Input::get('status_id')) == '') {
-                $asset->status_id =  NULL;
-            } else {
-                $asset->status_id = e(Input::get('status_id'));
-            }
+        if (e(Input::get('warranty_months')) == '') {
+            $asset->warranty_months =  NULL;
+        } else {
+            $asset->warranty_months        = e(Input::get('warranty_months'));
+        }
 
-            if (e(Input::get('warranty_months')) == '') {
-                $asset->warranty_months =  NULL;
-            } else {
-                $asset->warranty_months        = e(Input::get('warranty_months'));
-            }
+        if (e(Input::get('purchase_cost')) == '') {
+            $asset->purchase_cost =  NULL;
+        } else {
+            $asset->purchase_cost        = e(Input::get('purchase_cost'));
+        }
 
-            if (e(Input::get('purchase_cost')) == '') {
-                $asset->purchase_cost =  NULL;
-            } else {
-                $asset->purchase_cost        = e(Input::get('purchase_cost'));
-            }
+        if (e(Input::get('purchase_date')) == '') {
+            $asset->purchase_date =  NULL;
+        } else {
+            $asset->purchase_date        = e(Input::get('purchase_date'));
+        }
 
-            if (e(Input::get('purchase_date')) == '') {
-                $asset->purchase_date =  NULL;
-            } else {
-                $asset->purchase_date        = e(Input::get('purchase_date'));
-            }
-
-            if (e(Input::get('supplier_id')) == '') {
-                $asset->supplier_id =  NULL;
-            } else {
-                $asset->supplier_id        = e(Input::get('supplier_id'));
-            }
+        if (e(Input::get('supplier_id')) == '') {
+            $asset->supplier_id =  NULL;
+        } else {
+            $asset->supplier_id        = e(Input::get('supplier_id'));
+        }
 
 
-            // Update the asset data
-            $asset->name            		= e(Input::get('name'));
-            $asset->serial            		= e(Input::get('serial'));
-            $asset->model_id           		= e(Input::get('model_id'));
-            $asset->order_number            = e(Input::get('order_number'));
-            $asset->asset_tag           	= e(Input::get('asset_tag'));
-            $asset->notes            		= e(Input::get('notes'));
-            $asset->requestable            	= e(Input::get('requestable'));
-            $asset->physical            	= '1';
+        // Update the asset data
+        $asset->name            		= e(Input::get('name'));
+        $asset->serial            		= e(Input::get('serial'));
+        $asset->model_id           		= e(Input::get('model_id'));
+        $asset->order_number            = e(Input::get('order_number'));
+        $asset->asset_tag           	= e(Input::get('asset_tag'));
+        $asset->notes            		= e(Input::get('notes'));
+        $asset->requestable            	= e(Input::get('requestable'));
+        $asset->status_id               = e(Input::get('status_id'));
+        $asset->physical            	= '1';
 
-            // Was the asset updated?
-            if($asset->save()) {
-                // Redirect to the new asset page
-                return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.update.success'));
-            }
-
+        // Was the asset updated?
+        if($asset->save()) {
+            // Redirect to the new asset page
+            return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.update.success'));
+        }
 
         // Redirect to the asset management page with error
         return Redirect::to("hardware/$assetId/edit")->with('error', Lang::get('admin/hardware/message.update.error'));
-
     }
 
     /**
@@ -503,9 +487,6 @@ class AssetsController extends AdminController
             // Redirect to the asset management page
             return Redirect::to('hardware')->with('success', Lang::get('admin/hardware/message.delete.success'));
         }
-
-
-
     }
 
     /**
@@ -520,7 +501,6 @@ class AssetsController extends AdminController
         }
 
         // Get the dropdown of users and then pass it to the checkout view
-//        $users_list = array('' => 'Select a User') + DB::table('users')->select(DB::raw('concat(first_name," ",last_name) as full_name, id'))->whereNull('deleted_at')->orderBy('last_name', 'asc')->orderBy('first_name', 'asc')->lists('full_name', 'id');
         $location_list = array('' => '') + Location::lists('name', 'id');
 
         //print_r($users);
@@ -529,8 +509,8 @@ class AssetsController extends AdminController
     }
 
     /**
-    * Check out the asset to a person
-    **/
+     * Check out the asset to a person
+     */
     public function postCheckout($assetId)
     {
         // Check if the asset exists
@@ -541,11 +521,10 @@ class AssetsController extends AdminController
 
         $location_id = e(Input::get('location_id'));
 
-
         // Declare the rules for the form validation
         $rules = array(
             'location_id'   => 'required|integer',
-            'note'   => 'alpha_space',
+            'note'          => 'alpha_space',
         );
 
         // Create a new validator instance from our validation rules
@@ -566,6 +545,7 @@ class AssetsController extends AdminController
 
         // Update the asset data
         $asset->location_id = e(Input::get('location_id'));
+        $asset->status_id = Statuslabel::DEPLOYED;
 
         // Was the asset updated?
         if($asset->save()) {
@@ -621,6 +601,7 @@ class AssetsController extends AdminController
 
         // Check the asset back to numedia
         $asset->location_id = Location::NUMEDIA_ID;
+        $asset->status_id = Statuslabel::TESTING;
 
         // Was the asset updated?
         if($asset->save()) {
@@ -687,8 +668,6 @@ class AssetsController extends AdminController
         if ($settings->qr_code == '1') {
             $asset = Asset::find($assetId);
             if (isset($asset->id)) {
-
-
                 $renderer = new \BaconQrCode\Renderer\Image\Png;
                 $renderer->setWidth($this->qrCodeDimensions['height'])
                 ->setHeight($this->qrCodeDimensions['height']);

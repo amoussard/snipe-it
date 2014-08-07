@@ -17,10 +17,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-
-                @if ($asset->location_id != Location::NUMEDIA_ID)
+                @if (in_array($asset->status_id, Statuslabel::$checkinStatus) && $asset->location_id != Location::NUMEDIA_ID)
                     <li><a href="{{ route('checkin/hardware', $asset->id) }}">@lang('admin/hardware/general.checkin')</a></li>
-                @else
+                @elseif(in_array($asset->status_id, Statuslabel::$checkoutStatus) && $asset->location_id == Location::NUMEDIA_ID)
                     <li><a href="{{ route('checkout/hardware', $asset->id) }}">@lang('admin/hardware/general.checkout')</a></li>
                 @endif
                 <li><a href="{{ route('update/hardware', $asset->id) }}">@lang('admin/hardware/general.edit')</a></li>
@@ -259,9 +258,9 @@
             <li>{{{ $asset->loc->address }}} {{{ $asset->loc->address2 }}}</li>
             <li>{{{ $asset->loc->city }}}, {{{ $asset->loc->state }}} {{{ $asset->loc->zip }}}</li>
 
-            @if ($asset->location_id != Location::NUMEDIA_ID)
+            @if (in_array($asset->status_id, Statuslabel::$checkinStatus) && $asset->location_id != Location::NUMEDIA_ID)
                 <li><a href="{{ route('checkin/hardware', $asset->id) }}" class="btn-flat large info ">@lang('admin/hardware/general.checkin')</a></li>
-            @else
+            @elseif(in_array($asset->status_id, Statuslabel::$checkoutStatus) && $asset->location_id == Location::NUMEDIA_ID)
                 <li><a href="{{ route('checkout/hardware', $asset->id) }}" class="btn-flat large success">@lang('admin/hardware/general.checkout')</a></li>
             @endif
         </ul>

@@ -7,13 +7,14 @@ class Asset extends Elegant
     protected $table = 'assets';
     protected $softDelete = true;
     protected $rules = array(
-        'name'   => 'alpha_space',
-        'asset_tag'   => 'required|alpha_space|min:3|unique:assets',
-        'model_id'   => 'required',
-        'serial'   => 'alpha_dash|min:3|unique:assets',
+        'name'              => 'alpha_space',
+        'asset_tag'         => 'required|alpha_space|min:3|unique:assets',
+        'model_id'          => 'required',
+        'serial'            => 'alpha_dash|min:3|unique:assets',
         'warranty_months'   => 'integer',
-        'note'   => 'alpha_space',
-        'notes'   => 'alpha_space',
+        'note'              => 'alpha_space',
+        'notes'             => 'alpha_space',
+        'status_id'         => 'required',
     );
 
 
