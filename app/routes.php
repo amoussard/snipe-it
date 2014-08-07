@@ -25,6 +25,8 @@ Route::group(array('prefix' => 'hardware'), function () {
     Route::post('{assetId}/checkout', 'Controllers\Admin\AssetsController@postCheckout');
     Route::get('{assetId}/checkin', array('as' => 'checkin/hardware', 'uses' => 'Controllers\Admin\AssetsController@getCheckin'));
     Route::post('{assetId}/checkin', 'Controllers\Admin\AssetsController@postCheckin');
+    Route::get('{assetId}/repare', array('as' => 'repare/hardware', 'uses' => 'Controllers\Admin\AssetsController@getRepare'));
+    Route::post('{assetId}/repare', 'Controllers\Admin\AssetsController@postRepare');
     Route::get('{assetId}/view', array('as' => 'view/hardware', 'uses' => 'Controllers\Admin\AssetsController@getView'));
     Route::get('{assetId}/qr_code', array('as' => 'qr_code/hardware', 'uses' => 'Controllers\Admin\AssetsController@getQrCode'));
 

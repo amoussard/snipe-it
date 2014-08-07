@@ -3,6 +3,7 @@
 class Location extends Elegant
 {
     const NUMEDIA_ID = 8;
+    const EXABIT_ID = 1621;
 
     protected $softDelete = true;
     protected $table = 'locations';

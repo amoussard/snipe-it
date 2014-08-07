@@ -147,6 +147,8 @@ class AssetsController extends AdminController
                 $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkin" class="btn btn-primary">checkin</a>';
             } elseif(in_array($asset->status_id, Statuslabel::$checkoutStatus) && $asset->location_id == Location::NUMEDIA_ID) {
                 $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkout" class="btn btn-info">checkout</a>';
+            } elseif(in_array($asset->status_id, Statuslabel::$repareStatus) && $asset->location_id == Location::NUMEDIA_ID) {
+                $aTmp[] = '<a href="/hardware/'.$asset->id.'/repare" class="btn btn-warning">repare</a>';
             } else {
                 $aTmp[] = null;
             }
@@ -620,6 +622,61 @@ class AssetsController extends AdminController
 
         // Redirect to the asset management page with error
         return Redirect::to("hardware")->with('error', Lang::get('admin/hardware/message.checkin.error'));
+    }
+
+    /**
+     * Send the asset to repare
+     *
+     * @param  int  $assetId
+     * @return View
+     **/
+    public function getRepare($assetId)
+    {
+        // Check if the asset exists
+        if (is_null($asset = Asset::find($assetId))) {
+            // Redirect to the asset management page with error
+            return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.not_found'));
+        }
+
+        return View::make('backend/hardware/repare', compact('asset'));
+    }
+
+
+    /**
+     * Check in the item so that it can be checked out again to someone else
+     *
+     * @param  int  $assetId
+     * @return View
+     **/
+    public function postRepare($assetId)
+    {
+        // Check if the asset exists
+        if (is_null($asset = Asset::find($assetId))) {
+            // Redirect to the asset management page with error
+            return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.not_found'));
+        }
+
+        // Check the asset back to numedia
+        $asset->location_id = Location::EXABIT_ID;
+        $asset->status_id = Statuslabel::OUT_FOR_REPAIR;
+
+        // Was the asset updated?
+        if($asset->save()) {
+            $logaction = new Actionlog();
+            $logaction->checkedout_to = Location::EXABIT_ID;
+            $logaction->asset_id = $asset->id;
+            $logaction->location_id = Location::EXABIT_ID;
+            $logaction->asset_type = ASSET::TYPE_HARDWARE;
+            $logaction->note = e(Input::get('note'));
+            $logaction->user_id = Sentry::getUser()->id;
+            $log = $logaction->logaction('Repare');
+
+            // Redirect to the new asset page
+            return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.repare.success'));
+        }
+
+        // Redirect to the asset management page with error
+        return Redirect::to("hardware")->with('error', Lang::get('admin/hardware/message.repare.error'));
     }
 
 

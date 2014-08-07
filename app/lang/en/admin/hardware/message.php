@@ -33,6 +33,11 @@ return array(
         'error'   		=> 'Asset was not checked in, please try again',
         'success' 		=> 'Asset checked in successfully.',
         'user_does_not_exist' => 'That user is invalid. Please try again.'
+    ),
+
+    'repare' => array(
+        'error'   		=> 'Asset was not sent to repare, please try again',
+        'success' 		=> 'Asset sent to repare successfully.',
     )
 
 );

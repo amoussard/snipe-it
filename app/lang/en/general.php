@@ -63,6 +63,7 @@ return array(
     'per_page'				=> 'Results Per Page',
     'profile'				=> 'Your profile',
     'ready_to_deploy'		=> 'Ready to Deploy',
+    'repare'		        => 'Repare',
     'reports'				=> 'Reports',
     'save'  				=> 'Save',
     'settings'				=> 'Settings',

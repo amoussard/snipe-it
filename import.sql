@@ -24,30 +24,30 @@ FROM tblFoLocation
 LEFT JOIN tblFoAddress ON tblFoLocation.`address` = tblFoAddress.id;
 
 SELECT
-	tblFoBox.id as 'id',
-	tblFoBox.des as 'name',
-	tblFoHardware.mac as 'asset_tag',
-	tblFoHardware.typeId as 'model_id',
-	NULL as 'serial',
-	NULL as 'purchase_date',
-	NULL as 'purchase_cost',
-	NULL as 'order_number',
-	0 as 'assigned_to',
-	NULL as 'notes',
-	1 as 'user_id',
-	NOW() as 'created_at',
-	NOW() as 'updated_at',
-	1 as 'physical',
-	NULL as 'deleted_at',
-	NULL as 'status_id',
-	0 as 'archived',
-	NULL as 'warranty_months',
-	0 as 'depreciated',
-	NULL as 'supplier_id',
-	0 as 'requestable',
-	tblFoBox.locationId as 'location_id'
+  tblFoBox.id as 'id',
+  tblFoBox.des as 'name',
+  tblFoHardware.mac as 'asset_tag',
+  tblFoHardware.typeId as 'model_id',
+  NULL as 'serial',
+  NULL as 'purchase_date',
+  NULL as 'purchase_cost',
+  NULL as 'order_number',
+  0 as 'assigned_to',
+  NULL as 'notes',
+  1 as 'user_id',
+  NOW() as 'created_at',
+  NOW() as 'updated_at',
+  1 as 'physical',
+  NULL as 'deleted_at',
+  IF(tblFoBox.locationId = 8, 6, 7) as 'status_id',
+  0 as 'archived',
+  NULL as 'warranty_months',
+  0 as 'depreciated',
+  NULL as 'supplier_id',
+  0 as 'requestable',
+  tblFoBox.locationId as 'location_id'
 FROM tblFoBox
-LEFT JOIN tblFoHardware ON tblFoBox.mac = tblFoHardware.mac;
+INNER JOIN tblFoHardware ON tblFoBox.mac = tblFoHardware.mac;
 
 
 SELECT

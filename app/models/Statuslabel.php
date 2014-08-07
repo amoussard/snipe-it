@@ -16,6 +16,11 @@ class Statuslabel extends Elegant
 
     public static $checkinStatus = array(
         self::DEPLOYED,
+        self::OUT_FOR_REPAIR,
+    );
+
+    public static $repareStatus = array(
+        self::TESTING,
     );
 
     public static $statusClass = array(
