@@ -28,7 +28,7 @@
                 <label class="sr-only" for="assetMac">MAC address</label>
                 <input type="text" id="assetMac" name="assetMac" class="form-control" placeholder="Enter MAC address" />
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <label class="sr-only" for="assetName">Name</label>
                 <input type="text" id="assetName" name="assetName" class="form-control" placeholder="Enter name" />
             </div>
@@ -39,7 +39,14 @@
                     'id' => 'assetModel'
                 )) }}
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
+                <label class="sr-only"  for="assetStatus">Status</label>
+                {{ Form::select('assetStatus', $status_list , 0, array(
+                    'class' => 'form-control',
+                    'id' => 'assetStatus'
+                )) }}
+            </div>
+            <div class="form-group col-md-2">
                 <label class="sr-only" for="assetLocation">Location</label>
                 <input type="text" id="assetLocation" name="assetLocation" class="form-control" placeholder="Enter a location name" />
             </div>

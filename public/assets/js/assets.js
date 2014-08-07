@@ -11,8 +11,9 @@
         var $el = $('#assets-table');
         var assetMac = "";
         var assetName = "";
-        var assetLocation = "";
         var assetModel = "";
+        var assetStatus = "";
+        var assetLocation = "";
         var assetNumedia = 0;
 
         var render = function() {
@@ -60,6 +61,7 @@
                         { 'name': 'assetName', 'value': assetName },
                         { 'name': 'assetLocation', 'value': assetLocation },
                         { 'name': 'assetModel', 'value': assetModel },
+                        { 'name': 'assetStatus', 'value': assetStatus },
                         { 'name': 'assetNumedia', 'value': assetNumedia }
                     );
                     $.getJSON(sSource, aoData).done(function (data) {
@@ -82,6 +84,10 @@
             });
             $("#assetModel").on('change', function(){
                 assetModel = $(this).val();
+                oTable.fnDraw();
+            });
+            $("#assetStatus").on('change', function(){
+                assetStatus = $(this).val();
                 oTable.fnDraw();
             });
             $("#assetNumedia").on('click', function(){

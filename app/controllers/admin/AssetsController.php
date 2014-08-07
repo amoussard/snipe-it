@@ -37,9 +37,11 @@ class AssetsController extends AdminController
     public function getIndex()
     {
         $model_list = array('-1' => 'Choose a model') + Model::orderBy('name', 'asc')->lists('name', 'id');
+        $status_list = array('-1' => 'Choose a status') + Statuslabel::orderBy('name', 'asc')->lists('name', 'id');
 
         return View::make('backend/hardware/index')
-            ->with('model_list', $model_list);
+            ->with('model_list', $model_list)
+            ->with('status_list', $status_list);
     }
 
     /**
@@ -57,12 +59,14 @@ class AssetsController extends AdminController
                 'assets.name as name',
                 'models.id as model_id',
                 'models.name as model_name',
-                'assets.status_id as status',
+                'status_labels.id as status_id',
+                'status_labels.name as status_name',
                 'locations.name as location_name',
                 'locations.id as location_id'
             )
             ->leftJoin('models', 'models.id', '=', 'assets.model_id')
             ->leftJoin('locations', 'locations.id', '=', 'assets.location_id')
+            ->leftJoin('status_labels', 'status_labels.id', '=', 'assets.status_id')
             ->where('assets.deleted_at', '=', NULL)
             ->skip($iPage * $perPage)
             ->take($perPage);
@@ -78,13 +82,17 @@ class AssetsController extends AdminController
         if (!empty($assetName)) {
             $assetQuery->where('assets.name', 'LIKE', '%'.$assetName.'%');
         }
-        $assetLocation = Input::get('assetLocation');
-        if (!empty($assetLocation)) {
-            $assetQuery->where('locations.name', 'LIKE', '%'.$assetLocation.'%');
-        }
         $assetModel = Input::get('assetModel');
         if (!empty($assetModel) && $assetModel != -1) {
             $assetQuery->where('models.id', '=', $assetModel);
+        }
+        $assetStatus = Input::get('assetStatus');
+        if (!empty($assetStatus) && $assetStatus != -1) {
+            $assetQuery->where('assets.status_id', '=', $assetStatus);
+        }
+        $assetLocation = Input::get('assetLocation');
+        if (!empty($assetLocation)) {
+            $assetQuery->where('locations.name', 'LIKE', '%'.$assetLocation.'%');
         }
         $assetNumedia = Input::get('assetNumedia');
         if ($assetNumedia == 1) {
@@ -109,7 +117,7 @@ class AssetsController extends AdminController
                 break;
             // Status
             case 3:
-                $assetQuery->orderBy('assets.status_id', Input::get('sSortDir_0'));
+                $assetQuery->orderBy('assets.status_name', Input::get('sSortDir_0'));
                 break;
             // Location
             case 4:
@@ -129,15 +137,17 @@ class AssetsController extends AdminController
                 '<a href="/hardware/'.$asset->id.'/view">'.htmlentities($asset->mac_address).'</a>',
                 '<a href="/hardware/'.$asset->id.'/view">'.htmlentities($asset->name).'</a>',
                 '<a href="/hardware/models/'.$asset->model_id.'/view">'.htmlentities($asset->model_name).'</a>',
-                $asset->status,
+                $asset->status_name,
                 '<a href="/admin/settings/locations/'.$asset->location_id.'/view">'.htmlentities($asset->location_name).'</a>',
             );
-            if ($asset->status < 1) {
+            if ($asset->status_id === NULL) {
                 if ($asset->location_id != Location::NUMEDIA_ID) {
                     $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkin" class="btn btn-primary">checkin</a>';
                 } else {
                     $aTmp[] = '<a href="/hardware/'.$asset->id.'/checkout" class="btn btn-info">checkout</a>';
                 }
+            } else {
+                $aTmp[] = null;
             }
             $aTmp[] = '
                 <a href="/hardware/'.$asset->id.'/edit" class="btn btn-warning">
