@@ -458,7 +458,7 @@ class AssetsController extends AdminController
         // Was the asset updated?
         if($asset->save()) {
             // Redirect to the new asset page
-            return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.update.success'));
+            return Redirect::to("hardware/$assetId/view")->with('success', Lang::get('admin/hardware/message.update.success'));
         }
 
         // Redirect to the asset management page with error
@@ -505,7 +505,6 @@ class AssetsController extends AdminController
         // Get the dropdown of users and then pass it to the checkout view
         $location_list = array('' => '') + Location::lists('name', 'id');
 
-        //print_r($users);
         return View::make('backend/hardware/checkout', compact('asset'))
             ->with('location_list', $location_list);
     }
@@ -542,7 +541,7 @@ class AssetsController extends AdminController
         // Check if the user exists
         if (is_null($location = Location::find($location_id))) {
             // Redirect to the asset management page with error
-            return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.location_does_not_exist'));
+            return Redirect::to("hardware/$assetId/view")->with('error', Lang::get('admin/hardware/message.location_does_not_exist'));
         }
 
         // Update the asset data
@@ -561,7 +560,7 @@ class AssetsController extends AdminController
             $log = $logaction->logaction('checkout');
 
             // Redirect to the new asset page
-            return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.checkout.success'));
+            return Redirect::to("hardware/$assetId/view")->with('success', Lang::get('admin/hardware/message.checkout.success'));
         }
 
         // Redirect to the asset management page with error
@@ -617,7 +616,7 @@ class AssetsController extends AdminController
             $log = $logaction->logaction('checkin from');
 
             // Redirect to the new asset page
-            return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.checkin.success'));
+            return Redirect::to("hardware/$assetId/view")->with('success', Lang::get('admin/hardware/message.checkin.success'));
         }
 
         // Redirect to the asset management page with error
@@ -672,7 +671,7 @@ class AssetsController extends AdminController
             $log = $logaction->logaction('Repare');
 
             // Redirect to the new asset page
-            return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.repare.success'));
+            return Redirect::to("hardware/$assetId/view")->with('success', Lang::get('admin/hardware/message.repare.success'));
         }
 
         // Redirect to the asset management page with error
