@@ -18,8 +18,6 @@ Route::group(array('prefix' => 'hardware'), function () {
     Route::post('create', 'Controllers\Admin\AssetsController@postCreate');
     Route::get('{assetId}/edit', array('as' => 'update/hardware', 'uses' => 'Controllers\Admin\AssetsController@getEdit'));
     Route::post('{assetId}/edit', 'Controllers\Admin\AssetsController@postEdit');
-    Route::get('{assetId}/clone', array('as' => 'clone/hardware', 'uses' => 'Controllers\Admin\AssetsController@getClone'));
-    Route::post('{assetId}/clone', 'Controllers\Admin\AssetsController@postCreate');
     Route::get('{assetId}/delete', array('as' => 'delete/hardware', 'uses' => 'Controllers\Admin\AssetsController@getDelete'));
     Route::get('{assetId}/checkout', array('as' => 'checkout/hardware', 'uses' => 'Controllers\Admin\AssetsController@getCheckout'));
     Route::post('{assetId}/checkout', 'Controllers\Admin\AssetsController@postCheckout');

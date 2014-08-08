@@ -11,23 +11,20 @@
 
 <div class="row header">
     <div class="col-md-12">
-        <div class="btn-group pull-right">
-            <button class="btn glow">@lang('button.actions')</button>
-            <button class="btn glow dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                @if (in_array($asset->status_id, Statuslabel::$checkinStatus) && $asset->location_id != Location::NUMEDIA_ID)
-                    <li><a href="{{ route('checkin/hardware', $asset->id) }}">@lang('admin/hardware/general.checkin')</a></li>
-                @elseif(in_array($asset->status_id, Statuslabel::$checkoutStatus) && $asset->location_id == Location::NUMEDIA_ID)
-                    <li><a href="{{ route('checkout/hardware', $asset->id) }}">@lang('admin/hardware/general.checkout')</a></li>
-                @elseif(in_array($asset->status_id, Statuslabel::$repareStatus) && $asset->location_id == Location::NUMEDIA_ID)
-                    <li><a href="{{ route('repare/hardware', $asset->id) }}">@lang('admin/hardware/general.repare')</a></li>
-                @endif
-                <li><a href="{{ route('update/hardware', $asset->id) }}">@lang('admin/hardware/general.edit')</a></li>
-                <li><a href="{{ route('clone/hardware', $asset->id) }}">@lang('admin/hardware/general.clone')</a></li>
-            </ul>
+        <div class="btn-group pull-left">
+            <a href="{{ route('hardware') }}" class="btn btn-default">
+                <i class="icon-pencil icon-white"></i>
+                @lang('admin/hardware/general.back')
+            </a>
         </div>
+        <div class="btn-group pull-right">
+            <a href="{{ route('update/hardware', $asset->id) }}" class="btn btn-warning">
+                <i class="icon-pencil icon-white"></i>
+                @lang('admin/hardware/general.edit')
+            </a>
+        </div>
+
+        <br style="clear: both"/>
 
         <h3 class="name">
             @lang('admin/hardware/general.view')

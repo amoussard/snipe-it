@@ -9,4 +9,5 @@ return array(
     'edit'  					=> 'Edit Asset',
     'pending'  					=> 'Pending Asset',
     'view'  					=> 'View Asset',
+    'back'  					=> 'Retour à la liste',
 );

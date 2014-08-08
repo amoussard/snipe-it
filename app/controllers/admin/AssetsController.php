@@ -742,32 +742,4 @@ class AssetsController extends AdminController
         $response = Response::make('', 404);
         return $response;
     }
-
-    /**
-     * Asset update.
-     *
-     * @param  int  $assetId
-     * @return View
-     */
-    public function getClone($assetId = null)
-    {
-        // Check if the asset exists
-        if (is_null($asset = Asset::find($assetId))) {
-            // Redirect to the asset management page
-            return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.does_not_exist'));
-        }
-
-        // Grab the dropdown list of models
-        $model_list = array('' => '') + Model::lists('name', 'id');
-
-        // Grab the dropdown list of status
-        $statuslabel_list = array('' => 'Pending') + array('0' => 'Ready to Deploy') + Statuslabel::lists('name', 'id');
-
-        // get depreciation list
-        $depreciation_list = array('' => '') + Depreciation::lists('name', 'id');
-
-        return View::make('backend/hardware/clone', compact('asset'))->with('model_list',$model_list)->with('depreciation_list',$depreciation_list)->with('statuslabel_list',$statuslabel_list);
-    }
-
-
 }
