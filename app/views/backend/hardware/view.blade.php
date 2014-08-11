@@ -144,6 +144,7 @@
                         </a>
                     </div>
                 @endif
+
             </div>
 
 		<!-- Licenses assets table -->
@@ -242,12 +243,30 @@
     <!-- side address column -->
     <div class="col-md-3 col-xs-12 address pull-right">
 
-        @if ($qr_code->display)
-            <h6>@lang('admin/hardware/form.qr')</h6>
-            <p>
-                <img src="{{{ $qr_code->url }}}" />
-            </p>
+        <h6>@lang('admin/hardware/form.barcode')</h6>
+
+        @if ($asset->barcode)
+            <div class="col-md-12">
+                @if ($asset->barcode != $new_barcode)
+                    <div class="alert alert-warning" style="width: 100%">
+                        <i class="icon-flag"></i>
+                        <span>The asset have a outdated barcode to identify it. Click </span>
+                        <a href="{{ route('barcode/hardware', $asset->id) }}">here</a>
+                        <span>to generate another on.</span>
+                    </div>
+                @endif
+                {{ $asset->barcode }}
+            </div>
+        @else
+            <div class="alert alert-warning">
+                <i class="icon-flag"></i>
+                <span>The asset have not a barcode to identify it. Click </span>
+                <a href="{{ route('barcode/hardware', $asset->id) }}">here</a>
+                <span>to generate one.</span>
+            </div>
         @endif
+
+        <div class="clearfix"></div>
 
         <h6>@lang('admin/hardware/form.location')</h6>
 

@@ -319,24 +319,25 @@ class AssetsController extends AdminController
             }
 
             // Save the asset data
-            $asset->name            		= e(Input::get('name'));
-            $asset->serial            		= e(Input::get('serial'));
-            $asset->model_id           		= e(Input::get('model_id'));
-            $asset->order_number            = e(Input::get('order_number'));
-            $asset->notes            		= e(Input::get('notes'));
-            $asset->asset_tag            	= e(Input::get('asset_tag'));
-            $asset->supplier_id            	= e(Input::get('supplier_id'));
-            $asset->status_id               = e(Input::get('status_id'));
-            $asset->user_id          		= Sentry::getId();
-            $asset->archived          			= '0';
-            $asset->physical            		= '1';
-            $asset->depreciate          		= '0';
-            $asset->requestable            	= e(Input::get('requestable'));
+            $asset->name            = e(Input::get('name'));
+            $asset->serial          = e(Input::get('serial'));
+            $asset->model_id        = e(Input::get('model_id'));
+            $asset->order_number    = e(Input::get('order_number'));
+            $asset->notes           = e(Input::get('notes'));
+            $asset->asset_tag       = e(Input::get('asset_tag'));
+            $asset->supplier_id     = e(Input::get('supplier_id'));
+            $asset->status_id       = e(Input::get('status_id'));
+            $asset->user_id         = Sentry::getId();
+            $asset->archived        = '0';
+            $asset->physical        = '1';
+            $asset->depreciate      = '0';
+            $asset->requestable     = e(Input::get('requestable'));
+            $asset->barcode         = md5($asset->serial.$asset->asset_tag.$asset->model_id);
 
             // Was the asset created?
             if($asset->save()) {
                 // Redirect to the asset listing page
-                return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.create.success'));
+                return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.create.success', array('barcode' => $asset->barcode)));
             }
         } else {
             // failure
@@ -690,17 +691,9 @@ class AssetsController extends AdminController
         $asset = Asset::find($assetId);
 
         if (isset($asset->id)) {
+            $new_barcode = md5($asset->serial.$asset->asset_tag.$asset->model_id);
 
-            $settings = Setting::getSettings();
-
-            $qr_code = (object) array(
-                'display' => $settings->qr_code == '1',
-                'height' => $this->qrCodeDimensions['height'],
-                'width' => $this->qrCodeDimensions['width'],
-                'url' => route('qr_code/hardware', $asset->id)
-            );
-
-            return View::make('backend/hardware/view', compact('asset', 'qr_code'));
+            return View::make('backend/hardware/view', compact('asset', 'new_barcode'));
         } else {
             // Prepare the error message
             $error = Lang::get('admin/hardware/message.does_not_exist', compact('id'));
@@ -708,7 +701,6 @@ class AssetsController extends AdminController
             // Redirect to the user management page
             return Redirect::route('assets')->with('error', $error);
         }
-
     }
 
     /**
@@ -741,5 +733,41 @@ class AssetsController extends AdminController
 
         $response = Response::make('', 404);
         return $response;
+    }
+
+    /**
+     * Check in the item so that it can be checked out again to someone else
+     *
+     * @param  int  $assetId
+     * @return View
+     **/
+    public function getGenerateBarcode($assetId)
+    {
+        // Check if the asset exists
+        if (is_null($asset = Asset::find($assetId))) {
+            // Redirect to the asset management page with error
+            return Redirect::to('hardware')->with('error', Lang::get('admin/hardware/message.not_found'));
+        }
+
+        // Check the asset back to numedia
+        $asset->barcode = md5($asset->serial.$asset->asset_tag.$asset->model_id);
+
+        // Was the asset updated?
+        if($asset->save()) {
+            $logaction = new Actionlog();
+            $logaction->checkedout_to = $asset->location_id;
+            $logaction->asset_id = $asset->id;
+            $logaction->location_id = $asset->location_id;
+            $logaction->asset_type = ASSET::TYPE_HARDWARE;
+            $logaction->note = null;
+            $logaction->user_id = Sentry::getUser()->id;
+            $log = $logaction->logaction('Generate barcode');
+
+            // Redirect to the new asset page
+            return Redirect::to("hardware/$assetId/view")->with('success', Lang::get('admin/hardware/message.generate_barcode.success'));
+        }
+
+        // Redirect to the asset management page with error
+        return Redirect::to("hardware")->with('error', Lang::get('admin/hardware/message.repare.error'));
     }
 }

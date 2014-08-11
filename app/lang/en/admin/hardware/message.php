@@ -8,8 +8,8 @@ return array(
     'assoc_users'	 	=> 'This asset is currently checked out to a user and cannot be deleted. Please check the asset in first, and then try deleting again. ',
 
     'create' => array(
-        'error'   		=> 'Asset was not created, please try again. :(',
-        'success' 		=> 'Asset created successfully. :)'
+        'error'   		=> 'Asset was not created, please try again later.',
+        'success' 		=> 'Asset created successfully with the barcode :barcode'
     ),
 
     'update' => array(
@@ -36,8 +36,13 @@ return array(
     ),
 
     'repare' => array(
-        'error'   		=> 'Asset was not sent to repare, please try again',
+        'error'   		=> 'Asset was not sent to repare, please try again.',
         'success' 		=> 'Asset sent to repare successfully.',
+    ),
+
+    'generate_barcode' => array(
+        'error'   		=> 'Asset barcode was not generated, please try again later.',
+        'success' 		=> 'Asset barcode was generated successfully.',
     )
 
 );

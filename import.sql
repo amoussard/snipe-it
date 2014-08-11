@@ -62,3 +62,17 @@ SELECT
 	1 as 'user_id',
 	0 as 'eol'
 FROM tblFoHardwareType;
+
+INSERT INTO asset_logs
+  SELECT
+    NULL as 'id',
+    1,
+    'Localization',
+    assets.id,
+    assets.location_id,
+    assets.location_id,
+    NOW(),
+    'hardware',
+    'Init',
+    NULL
+  FROM assets;

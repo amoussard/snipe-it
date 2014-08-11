@@ -1,7 +1,7 @@
 <?php
 
 return array(
-
+    'barcode'		    => 'Barcode',
     'checkedout_to'		=> 'Checked Out To',
     'checkout_to'		=> 'Checkout to',
     'cost'				=> 'Purchase Cost',
