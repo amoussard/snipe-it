@@ -217,23 +217,6 @@
                         </tr>
                     @endforeach
                 @endif
-                <tr>
-                    <td>{{ $asset->created_at }}</td>
-                    <td>
-                        @if ($asset->adminuser->id)
-                            {{{ $asset->adminuser->fullName() }}}
-                        @else
-                            @lang('general.unknown_admin')
-                        @endif
-                    </td>
-                    <td>@lang('general.created_asset')</td>
-                    <td></td>
-                    <td>
-                        @if ($asset->notes)
-                            {{{ $asset->notes }}}
-                        @endif
-                    </td>
-                </tr>
             </tbody>
         </table>
 
