@@ -235,7 +235,7 @@
                         <i class="icon-flag"></i>
                         <span>The asset have a outdated barcode to identify it. Click </span>
                         <a href="{{ route('barcode/hardware', $asset->id) }}">here</a>
-                        <span>to generate another on.</span>
+                        <span>to generate another one.</span>
                     </div>
                 @endif
                 {{ $asset->barcode }}
