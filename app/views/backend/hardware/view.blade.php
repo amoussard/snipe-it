@@ -253,7 +253,9 @@
 
         <h6>@lang('admin/hardware/form.location')</h6>
 
-        <iframe width="300" height="133" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?&amp;q={{{ $asset->loc->address }}},{{{ $asset->loc->city }}},{{{ $asset->loc->state }}},{{{ $asset->loc->country }}}&amp;output=embed"></iframe>
+        @if ($asset->loc)
+            <iframe width="300" height="133" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?&amp;q={{{ $asset->loc->address }}},{{{ $asset->loc->city }}},{{{ $asset->loc->state }}},{{{ $asset->loc->country }}}&amp;output=embed"></iframe>
+        @endif
         <ul>
             <li>{{{ $asset->loc->name }}}</li>
             <li>{{{ $asset->loc->address }}} {{{ $asset->loc->address2 }}}</li>
