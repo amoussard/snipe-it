@@ -343,7 +343,8 @@ class AssetsController extends AdminController
             // Was the asset created?
             if($asset->save()) {
                 // Redirect to the asset listing page
-                return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.create.success', array('barcode' => $asset->barcode)));
+                return Redirect::to("hardware/$asset->id/view")->with('success', Lang::get('admin/hardware/message.update.success'));
+//                return Redirect::to("hardware")->with('success', Lang::get('admin/hardware/message.create.success', array('barcode' => $asset->barcode)));
             }
         } else {
             // failure
