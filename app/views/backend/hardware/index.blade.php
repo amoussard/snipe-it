@@ -55,6 +55,10 @@
                     <input type="checkbox" id="assetNumedia"> At Nümedia
                 </label>
             </div>
+            <div class="form-group col-md-2">
+                <label class="sr-only" for="assetOrderNumber">Name</label>
+                <input type="text" id="assetOrderNumber" name="assetOrderNumber" class="form-control" placeholder="Order number" />
+            </div>
         </form>
     </div>
 

@@ -14,6 +14,7 @@
         var assetModel = "";
         var assetStatus = "";
         var assetLocation = "";
+        var assetOrderNumber = "";
         var assetNumedia = 0;
 
         var render = function() {
@@ -62,7 +63,8 @@
                         { 'name': 'assetLocation', 'value': assetLocation },
                         { 'name': 'assetModel', 'value': assetModel },
                         { 'name': 'assetStatus', 'value': assetStatus },
-                        { 'name': 'assetNumedia', 'value': assetNumedia }
+                        { 'name': 'assetNumedia', 'value': assetNumedia },
+                        { 'name': 'assetOrderNumber', 'value': assetOrderNumber }
                     );
                     $.getJSON(sSource, aoData).done(function (data) {
                         fnCallback(data);
@@ -88,6 +90,10 @@
             });
             $("#assetStatus").on('change', function(){
                 assetStatus = $(this).val();
+                oTable.fnDraw();
+            });
+            $("#assetOrderNumber").on('change', function(){
+                assetOrderNumber = $(this).val();
                 oTable.fnDraw();
             });
             $("#assetNumedia").on('click', function(){
