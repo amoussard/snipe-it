@@ -318,6 +318,12 @@ class AssetsController extends AdminController
                 $asset->assigned_to        = e(Input::get('assigned_to'));
             }
 
+            if (e(Input::get('location_id')) == '') {
+                $asset->location_id =  NULL;
+            } else {
+                $asset->location_id =  e(Input::get('location_id'));
+            }
+
             // Save the asset data
             $asset->name            = e(Input::get('name'));
             $asset->serial          = e(Input::get('serial'));
