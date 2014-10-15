@@ -15,6 +15,9 @@ class Statuslabel extends Elegant
 
     public static $checkoutStatus = array(
         self::READY_TO_DEPLOY,
+        self::TESTING,
+        self::INTERNAL_USAGE,
+        self::READY_TO_STAGE,
     );
 
     public static $checkinStatus = array(
