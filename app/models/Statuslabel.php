@@ -9,6 +9,9 @@ class Statuslabel extends Elegant
     const READY_TO_DEPLOY = 5;
     const TESTING = 6;
     const DEPLOYED = 7;
+    const INTERNAL_USAGE = 8;
+    const READY_TO_STAGE = 9;
+    const WAITING_FOR_RETURN = 10;
 
     public static $checkoutStatus = array(
         self::READY_TO_DEPLOY,
@@ -17,6 +20,7 @@ class Statuslabel extends Elegant
     public static $checkinStatus = array(
         self::DEPLOYED,
         self::OUT_FOR_REPAIR,
+        self::WAITING_FOR_RETURN,
     );
 
     public static $repareStatus = array(
@@ -31,6 +35,9 @@ class Statuslabel extends Elegant
         self::READY_TO_DEPLOY => 'btn-primary',
         self::TESTING => 'btn-info',
         self::DEPLOYED => 'btn-success',
+        self::INTERNAL_USAGE => 'btn-success',
+        self::READY_TO_STAGE => 'btn-info',
+        self::WAITING_FOR_RETURN => 'btn-info',
     );
 
     protected $table = 'status_labels';
