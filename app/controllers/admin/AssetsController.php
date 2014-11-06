@@ -98,6 +98,10 @@ class AssetsController extends AdminController
         if (!empty($assetOrderNumber)) {
             $assetQuery->where('assets.order_number', 'LIKE', '%'.$assetOrderNumber.'%');
         }
+        $assetId = Input::get('assetId');
+        if (!empty($assetId)) {
+            $assetQuery->where('assets.id', '=', $assetId);
+        }
         $assetNumedia = Input::get('assetNumedia');
         if ($assetNumedia == 1) {
             $assetQuery->where('locations.id', '=', Location::NUMEDIA_ID);

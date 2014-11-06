@@ -688,7 +688,13 @@
     margin-bottom: 10px;
 }
 
+.filters-form .checkbox {
+    padding: 10px 20px;
+}
 .filters-form .checkbox label {
     margin-top: 7px;
     display: inline-block;
+}
+.filters-form .form-group {
+    margin-top: 10px;
 }
